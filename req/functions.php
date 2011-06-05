@@ -23,7 +23,7 @@ $fromAddress = "Localhost@Localhost.com";
 //Bitcoind RPC information
 $rpcType	= "http";
 $rpcUsername	= "xenland";
-$rpcPassword 	= "fuckyou";
+$rpcPassword 	= "fuckyou"; //I dont purposely put this to offend anyone, its just easy to remember
 $rpcHost	= "localhost";
 
 
@@ -55,6 +55,7 @@ function connectToDb(){
 
 
 function loginUser($username, $password){
+		$loginSuccess = 0;
 	//Make global
 		global $cookieName, $cookiePath, $cookieDomain;
 
@@ -63,20 +64,17 @@ function loginUser($username, $password){
 
 	//mysql injection protection
 		$username = mysql_real_escape_string($username);
-		$password = mysql_real_escape_string($password);
 
 	//Hash password for password checking
 		$password = hash("sha256", $password);
-
 	//Check if this login an username is correct
-		$loginCheckQ	= mysql_query("SELECT `id`, `emailAuthorised` FROM `websiteUsers` WHERE `username` = '".$username."' AND `password` = '".$password."' LIMIT 0,1");
-		$loginSuccess	= mysql_num_rows($loginCheckQ);
+
+		$loginCheckQ	= mysql_query("SELECT `id`, `emailAuthorised` FROM `websiteUsers` WHERE `username` = '".$username."' AND `password` = '".$password."' LIMIT 0,1")or die(mysql_error());
 		$loginObj	= mysql_fetch_object($loginCheckQ);
 		$userId 	= $loginObj->id;
 		$emailAuthorised = $loginObj->emailAuthorised;
 
 	//Set cookie; If validlogin is true
-		if($loginSuccess == 1){
 			if($emailAuthorised == 1){
 				//Get ip address so we can hash with the cookie
 					$ip = $_SERVER['REMOTE_ADDR'];
@@ -94,15 +92,19 @@ function loginUser($username, $password){
 					//Get hashed password for hashing the cookie
 						$getPassQ = mysql_query("SELECT `password` FROM `websiteUsers` WHERE `id` = '".$userId."'");
 						$getPassObj = mysql_fetch_object($getPassQ);
-					$hash		= $randomSecret.$password.$ip.$timeoutStamp;
-					$hash = hash("sha256", $hash);
-					//Make cookie :)
-					setcookie($cookieName, $userId."-".$hash, $timeoutStamp, $cookiePath, $cookieDomain);
-			}else if(!$emailAuthorised){
-				$loginSuccess = -1;
-			}
-		}
 
+					//Make cookie :)
+						$hash	= $randomSecret.$password.$ip.$timeoutStamp;
+						$hash = hash("sha256", $hash);
+						setcookie($cookieName, $userId."-".$hash, $timeoutStamp, $cookiePath, $cookieDomain);
+
+				//Successfull login code
+					$loginSuccess = 1;
+
+			}else if($emailAuthorised == 0){
+
+				$loginSuccess = 3;
+			}
 	//Return Boolean;
 		return $loginSuccess;
 }
@@ -251,6 +253,8 @@ function getCashoutMin(){
 
 
 function activateAccount($userId, $authPin){
+		$detailsMatch = 0;
+
 	//Connect to database
 		connectToDb();
 
@@ -268,7 +272,7 @@ function activateAccount($userId, $authPin){
 			//Activate this account
 				mysql_query("UPDATE `websiteUsers` SET `emailAuthorised` = '1' WHERE `id` = '$userId'");
 		}
-	return $detailsMatch."-".$emailAuthPin;
+	return $detailsMatch;
 }
 
 ////////////// Content Output ////////////////////////////////////////////////////////////

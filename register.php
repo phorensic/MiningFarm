@@ -146,14 +146,46 @@
 							
 							<form action="/register.php" method="post">
 								<input type="hidden" name="act" value="signup"/>
-								Username:<input type="text" name="username" value="<?php echo $_POST["username"];?> " maxlength="20" size="10"/><br/>
-								Password:<input type="password" name="password" value="<?php echo $_POST["password"];?> " maxlength="45" size="10"/><br/>
-								Retype Password:<input type="password" name="password2" value="<?php echo $_POST["password2"];?> " maxlength="45" size="10"/><br/>
+								<?php
+									if($_POST["username"]){
+										$tmpUsername	= $_POST["username"];
+									}else{
+										$tmpUsername 	= "";
+									}
+									if($_POST["password"]){
+										$tmpPassword	= $_POST["password"];
+									}else{
+										$tmpPassword	= NULL;
+									}
+									if($_POST["password2"]){
+										$tmpPassword2	= $_POST["password2"];
+									}else{
+										$tmpPassword2	= "";
+									}
+									if($_POST["email"]){
+										$tmpEmail	= $_POST["email"];
+									}else{
+										$tmpEmail	= "";
+									}
+									if($_POST["email2"]){
+										$tmpEmail2	= $_POST["email2"];
+									}else{
+										$tmpEmail2	= "";
+									}
+									if($_POST["authPin"]){
+										$tmpAuthPin	= $_POST["authPin"];
+									}else{
+										$tmpAuthPin	= "";
+									}
+								?>
+								Username:<input type="text" name="username" value="<?php echo $tmpUsername; ?>" maxlength="20" size="10"/><br/>
+								Password:<input type="password" name="password" value="<?php echo $tmpPassword;?>" maxlength="45" size="10"/><br/>
+								Retype Password:<input type="password" name="password2" value="<?php echo $tmpPassword2;?>" maxlength="45" size="10"/><br/>
 								<hr size="1" width="100%"><br/>
-								Real Email: <input type="text" name="email" value="<?php echo $_POST["email"];?> " size="15"/><br/>
-								Retype Email: <input type="text" name="email2" value="<?php echo $_POST["email2"];?> " size="15"/><br/>
+								Real Email: <input type="text" name="email" value="<?php echo $tmpEmail;?>" size="15"/><br/>
+								Retype Email: <input type="text" name="email2" value="<?php echo $tmpEmail2;?>" size="15"/><br/>
 								<hr size="1" width="100%"><br/>
-								Authorization Pin: <input type="password" name="authPin" value="<?php echo $_POST["authPin"];?> " size="4" maxlength="4">(Memorize this 4 digit pin #)<br/>
+								Authorization Pin: <input type="password" name="authPin" value="<?php echo $tmpAuthPin;?>" size="4" maxlength="4">(Memorize this 4 digit pin #)<br/>
 								<input type="submit" value="Register">
 							</form>
 					<?php

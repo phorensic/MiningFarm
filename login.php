@@ -8,20 +8,28 @@
 	include($functions);
 
 //Perform login
-	$loginSuccess =  loginUser($_POST["username"], $_POST["password"]);
+	$loginSuccess = loginUser($_POST["username"], $_POST["password"]);
 
 //Generate message
 	if($loginSuccess == 1){
-		$goodMessage = "Welcome back, Were redirecting you to the main page right meow. Just sit tight.";
-	}
+		$goodMessage = "Welcome back!, <br/>".$_POST["username"];
+		//Set user details for userInfo box
+			$getCredientials	= new getCredientials;
+			$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
 
-	if($loginSuccess == 0){
-		$returnError = "Login failed - wrong username or password";
-	}
+	}else if($loginSuccess == 0){
 
-	if($loginSuccess == -1){
+		$returnError = "LOGIN FAILED | WHAT DID YOU DO!?";
+
+	}else if($loginSuccess == 3){
+
 		$returnError = " Login failed - You haven't authorised your email account yet";
+	}else  if($loginSuccess == 4){
+
+			$returnError = "Login failed | You forgot your user name or password";
 	}
+
+
 ?>
 <html>
 	<head>
@@ -51,8 +59,15 @@
 			////////////////////////////
 			?>
 			<div id="bodyContent">
+				<?php 
+				//Ouput the login or the users stats depending on weather or not they are logged in
+				include($userInfoBox); 
+				/////////////////////////////////////
+				?>
+				<div class="loginMessages">
 					<span class="returnError"><?php echo $returnError;?></span>
 					<span class="goodMessage"><?php echo $goodMessage;?></span>
+				</div>
 			</div>
 		</div>
 	</body>

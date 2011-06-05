@@ -7,7 +7,7 @@
 body{
 	background-color:#FFFFCC;
 	background-image:url(/images/background.jpg);
-	background-position:25em 0;
+	background-position:13em 8em;
 	color:#FFF;
 	
 	height:100%
@@ -24,7 +24,7 @@ body{
 
 	/*--Menu Box--*/
 		#menuBar{
-			background-image:url(/images/contentBg-header.png);
+			background-image:url(/images/contentBg.png);
 			background-color:#1874CD;
 			width: 100%;
 			height:2.5em;
@@ -52,7 +52,7 @@ body{
 			left:-1em;
 			float:left;
 			background-color:#104E8B;
-			background-image:url(/images/contentBg-header.png);
+			background-image:url(/images/contentBg.png);
 			width:15em;
 			height: 100%;
 			margin-left:1em;
@@ -83,7 +83,7 @@ body{
 			left:-1em;
 			float:left;
 			background-color:#104E8B;
-			background-image:url(/images/contentBg-header.png);
+			background-image:url(/images/contentBg.png);
 			width:15em;
 			height: 100%;
 			margin-left:1em;
@@ -93,7 +93,7 @@ body{
 	/*--Blog Post--*/
 		.blogPost{
 			width:56%;
-			
+			padding-top:1.5em;
 			/*background-image:url(/images/contentBg-header.png);*/
 		}
 		
@@ -101,7 +101,7 @@ body{
 		#footer{
 			width:56%;
 			text-align:center;
-			margin-top:2.5em;
+			margin-top:3.5em;
 			/*background-image:url(/images/contentBg-header.png);*/
 		}
 
@@ -159,4 +159,10 @@ body{
 			font-weight:bold;
 			font-size:1.5em;
 			text-align:center;
+		}
+		
+	/*--Login Messages--*/
+		.loginMessages{
+			padding:3em;
+			font-size:1.5em;
 		}
