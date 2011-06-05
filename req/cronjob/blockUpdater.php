@@ -41,14 +41,16 @@
 		$minimumCashout = $minimumCashoutObj->cashoutMinimum;
 
 		//Get list of `balances` FROM `accountBalance` that are greater then the cashoutMinumum
-			$getListOfAccountsQ = mysql_query("SELECT `id`, `balance`, `userId`, `payoutAddress` FROM `accountBalance` WHERE `balance` > $minimumCashout");
+			$getListOfAccountsQ = mysql_query("SELECT `id`, `balance`, `userId`, `threashhold` `payoutAddress` FROM `accountBalance` WHERE `balance` > $minimumCashout");
 			while($accounts = mysql_fetch_array($getListOfAccountsQ){
-				//Check to see what minimum cash out this user as set
-				//Send `balance` to `payoutAddress`
-					$bitcoinController->sendtoaddress($accounts["payoutAddress"], $accounts["balance"]);
-			
-				//Reset balance to zero
-					mysql_query("UPDATE `accountBalance` SET `balance` = '0' WHERE `id` = '".$accounts["id"]."'");
+				//Only send balance if there balance exceeds their threashhool
+					if($accounts["threashhold"] < $accounts["balance"]){
+						//Send `balance` to `payoutAddress`
+							$bitcoinController->sendtoaddress($accounts["payoutAddress"], $accounts["balance"]);
+					
+						//Reset balance to zero
+							mysql_query("UPDATE `accountBalance` SET `balance` = '0' WHERE `id` = '".$accounts["id"]."'");
+					}
 			}
 ?>
 

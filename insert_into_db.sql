@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 04, 2011 at 04:56 PM
+-- Generation Time: Jun 05, 2011 at 07:16 AM
 -- Server version: 5.1.54
 -- PHP Version: 5.3.5-1ubuntu7.2
 
@@ -33,14 +33,12 @@ CREATE TABLE IF NOT EXISTS `accountBalance` (
   `threshhold` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
 
 --
 -- Dumping data for table `accountBalance`
 --
 
-INSERT INTO `accountBalance` (`id`, `userId`, `balance`, `payoutAddress`, `threshhold`) VALUES
-(14, 17, '0.00', '', '');
 
 -- --------------------------------------------------------
 
@@ -159,7 +157,8 @@ CREATE TABLE IF NOT EXISTS `shares_history` (
 
 CREATE TABLE IF NOT EXISTS `websiteSettings` (
   `header` varchar(255) NOT NULL,
-  `confirmEmail` text NOT NULL,
+  `noreplyEmail` text NOT NULL,
+  `confirmEmailPrefix` text NOT NULL COMMENT 'The text or HTML written email that is sent for email confirmation',
   `slogan` varchar(255) NOT NULL,
   `browserTitle` varchar(255) NOT NULL,
   `cashoutMinimum` varchar(5) NOT NULL COMMENT 'The minimum balance required before a user can cash out'
@@ -169,8 +168,8 @@ CREATE TABLE IF NOT EXISTS `websiteSettings` (
 -- Dumping data for table `websiteSettings`
 --
 
-INSERT INTO `websiteSettings` (`header`, `confirmEmail`, `slogan`, `browserTitle`, `cashoutMinimum`) VALUES
-('Mining Pool v3', 'no-reply@yourdomain.com', 'IP:66.197.184.28 · PORT: 8341', 'Mining Pool v3', '1');
+INSERT INTO `websiteSettings` (`header`, `noreplyEmail`, `confirmEmailPrefix`, `slogan`, `browserTitle`, `cashoutMinimum`) VALUES
+('Mining Pool v3', 'no-reply@yourdomain.com', 'Welcome you "Your pool name here" glad you are interested in our services, In order to activate your account you must click the link provided and you will be allowed immediate login access past this point. Thank you for you time.', 'IP:66.197.184.28 · PORT: 8341', 'Mining Pool v3', '1');
 
 -- --------------------------------------------------------
 
@@ -191,11 +190,9 @@ CREATE TABLE IF NOT EXISTS `websiteUsers` (
   `emailAuthorisePin` varchar(64) NOT NULL,
   `authPin` varchar(255) NOT NULL COMMENT 'A pin that must be supplied when changing details to various things',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
 
 --
 -- Dumping data for table `websiteUsers`
 --
 
-INSERT INTO `websiteUsers` (`id`, `isAdmin`, `username`, `password`, `randomSecret`, `sessTimestamp`, `loggedIp`, `email`, `emailAuthorised`, `emailAuthorisePin`, `authPin`) VALUES
-(17, 0, ' fdsa', '6b8dca09e851a987050463c9c60603e9ad797ba09117056fc2e0c07bcac66e43', '', 0, '', 'xennetwork@hotmail.com', 0, 'rwYUUXIVMIzkHVYfVRqarI2AxFJOKtY2PNMABlmeTLpqxdwjUMkbldCIIbmjubba', '');
