@@ -37,6 +37,7 @@
 						$email = mysql_real_escape_string($_POST["email"]);
 						$username = mysql_real_escape_string($_POST["username"]);
 						$password = mysql_real_escape_string($_POST["password"]);
+						$authPin = mysql_real_escape_string($_POST["authPin"]);
 
 					//Make sure the username isn't already in the databse
 						$usernameExistsQ = mysql_query("SELECT `id` FROM `websiteUsers` WHERE `username` = '".$username."'");
@@ -52,9 +53,13 @@
 								
 								//Insert user into the `websiteUsers` database and retireve the `id`
 									$insertSuccess = mysql_query("INSERT INTO `websiteUsers`
-														(`username`, `password` , `emailAuthorisePin`, `email`)
-													VALUES('$username', '$hashedPassword', '$authoriseEmailPin', '$email')") or die(mysql_error());
+														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin)
+													VALUES('$username', '$hashedPassword', '$authoriseEmailPin', '$email', '$authPin')") or die(mysql_error());
+									
+									//Get userId
 									$insertId = mysql_insert_id();
+
+									//If user was successfully added to database
 									if($insertSuccess && $insertId > 0){
 										//Send confirmation email
 												//Get prefix message to write the user
@@ -63,21 +68,18 @@
 													$noreplyEmail = $emailMessageObj->noreplyEmail;
 													$message = $emailMessageObj->confirmEmailPrefix;
 												
-													//Add suffix
-														$message."\n<br/>"."http://$serverAddress/activateAccount.php?authPin=$authPin&userId=$userId";
-
+													//Add suffix to the activation link
+														$message .= "\n<br/>http://$serverAddress/activateAccount.php?authPin=$authoriseEmailPin&userId=$insertId";
+											
+												//Send an email with all the information
 													$to      = $email;
 													$subject = "Account Activation For ".$username;
 													$headers = "From: ".$noreplyEmail;
 
-												
-
-												//Send an email with all the information to confirm that email$emailSend = mail($email, 
 													mail($to, $subject, $message, $headers);
 												
 							
 											if($emailSent){
-											
 												$goodMessage = "Registration was a success! | Login to your email, ".$_POST["email"]." and click on link to activate your account!";
 											
 											}else{
@@ -87,6 +89,8 @@
 										//Add a zero balance to `accountBalance`
 											mysql_query("INSERT INTO `accountBalance` (`userId`, `balance`)
 																VALUES('".$insertId."', '0.00')");
+									}else{
+										$returnError = "Database error | User was not added to database, Please contact the admin.";
 									}
 							}else if($usernameExists > 0){
 								$returnError = "That username is already registered with us";

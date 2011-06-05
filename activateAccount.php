@@ -10,8 +10,6 @@
 
 //Check if supplied deatils match those in the databse
 	$activateSuccess = activateAccount($userId, $authPin);
-	echo $activateSuccess;
-	echo $authPin;
 	if($activateSuccess > 0){
 		$goodMessage = "Your acount is activated, You can login to your account now";
 	}else{
