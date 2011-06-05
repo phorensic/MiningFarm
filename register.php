@@ -50,7 +50,10 @@
 
 								//Generate an authoriseEmailPin
 									$authoriseEmailPin = genRandomString(64);
-								
+									
+								//Hash auth pin
+									$authPin = hash("sha256", $authPin);
+
 								//Insert user into the `websiteUsers` database and retireve the `id`
 									$insertSuccess = mysql_query("INSERT INTO `websiteUsers`
 														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin`)

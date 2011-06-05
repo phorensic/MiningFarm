@@ -15,7 +15,8 @@
 	<head>
 		<title><?php echo outputPageTitle();?> - Main Page</title>
 		<!--This is the main style sheet-->
-		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
+		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
+		<link rel="shortcut icon" href="/images/favicon.png" />
 		<?php
 			//If user isn't logged in load the login.js
 			if(!$loginSuccess){
