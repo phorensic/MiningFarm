@@ -53,7 +53,7 @@
 								
 								//Insert user into the `websiteUsers` database and retireve the `id`
 									$insertSuccess = mysql_query("INSERT INTO `websiteUsers`
-														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin)
+														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin`)
 													VALUES('$username', '$hashedPassword', '$authoriseEmailPin', '$email', '$authPin')") or die(mysql_error());
 									
 									//Get userId
@@ -137,7 +137,7 @@
 				<div id="blogContainer">
 					<?php if($goodMessage || $returnError){?>
 					<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
-					<span class="returnError"><?php echo $returnError; ?></span><br/>
+					<span class="returnError"><?php echo $returnError; ?></span><br/><br/>
 					<?php }
 
 						if($goodMessage == ""){

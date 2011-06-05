@@ -118,7 +118,7 @@ if($loginSuccess){
 					<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
 					<span class="returnError"><?php echo $returnError; ?></span><br/>
 					<h2 style="text-decoration:underline;">Workers</h2>
-					<iframe src="/workers.php" width="500" height="150" frameborder="0"></iframe><br/><br/>
+					<iframe src="/workers.php" width="500" height="150" frameborder="0" allowtransparency="true"></iframe><br/><br/>
 
 					<h2 style="text-decoration:underline;">Identity Details</h2><br/>
 					Username: <?php echo $getCredientials->username;?><br/>

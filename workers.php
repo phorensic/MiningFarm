@@ -46,7 +46,6 @@ if($loginSuccess){
 		}
 
 		if($act == "Delete Worker"){
-				echo "WORKER DELTEED!";
 				$getCredientials->getStats();
 
 			//Mysql Injection Protection
@@ -63,7 +62,8 @@ if($loginSuccess){
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
 		<style type="text/css">
 			body{
-				background-image:url('/images/contentBg.png');
+				background-color:transparent;
+				background-image:url();
 			}
 		</style>
 	</head>
