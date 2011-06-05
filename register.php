@@ -58,15 +58,24 @@
 									if($insertSuccess && $insertId > 0){
 										//Send confirmation email
 												//Get prefix message to write the user
-													$emailMessageQ = mysql_query("SELECT `confirmEmail` FROM `websiteSettings`");
+													$emailMessageQ = mysql_query("SELECT `noreplyEmail`, `confirmEmailPrefix` FROM `websiteSettings`");
 													$emailMessageObj = mysql_fetch_object($emailMessageQ);
-													$email = $emailMessageObj->confirmEmail;
+													$noreplyEmail = $emailMessageObj->noreplyEmail;
+													$message = $emailMessageObj->confirmEmailPrefix;
+												
+													//Add suffix
+														$message."\n<br/>"."http://$serverAddress/activateAccount.php?authPin=$authPin&userId=$userId";
 
-												//Send an email with all the information to confirm that email
-													$serverAddress = $_SERVER['SERVER_NAME'];
-													$emailSend = mail($email, 
-														"Confirmation Email", 
-														"http://$serverAddress/activateAccount.php?authPin=$authPin&userId=$userId");
+													$to      = $email;
+													$subject = "Account Activation For ".$username;
+													$headers = "From: ".$noreplyEmail;
+
+												
+
+												//Send an email with all the information to confirm that email$emailSend = mail($email, 
+													mail($to, $subject, $message, $headers);
+												
+							
 											if($emailSent){
 											
 												$goodMessage = "Registration was a success! | Login to your email, ".$_POST["email"]." and click on link to activate your account!";
