@@ -69,6 +69,7 @@
 													$message = $emailMessageObj->confirmEmailPrefix;
 												
 													//Add suffix to the activation link
+														$serverAddress = $_SERVER['HTTP_HOST'];
 														$message .= "\n<br/>http://$serverAddress/activateAccount.php?authPin=$authoriseEmailPin&userId=$insertId";
 											
 												//Send an email with all the information
