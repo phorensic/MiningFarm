@@ -81,7 +81,8 @@ if($loginSuccess){
 		?>
 		<form action="workers.php" method="post">
 			<input type="hidden" name="workerId" value="<?=$worker["id"]?>">
-			--user=<?php echo $splitUser[0]; ?>.<input type="text" name="username" value="<?php echo $splitUser[1]; ?>" size="10"> --pass=<input type="text" name="password" value="<?php echo $worker["password"];?>" size="10"><input type="submit" name="act" value="Update Worker"><input type="submit" name="act" value="Delete Worker"/>
+			<?php echo $splitUser[0]; ?>.<input type="text" name="username" value="<?php echo $splitUser[1]; ?>" size="10"> <input type="text" name="password" value="<?php echo $worker["password"];?>" size="10"><input type="submit" name="act" value="Update Worker"><input type="submit" name="act" value="Delete Worker"/>
+			800Mhash/s
 		</form>
 		<hr size="1" width="100%"><br/>
 		<?php

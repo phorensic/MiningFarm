@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2011 at 07:16 AM
+-- Generation Time: Jun 05, 2011 at 04:54 PM
 -- Server version: 5.1.54
 -- PHP Version: 5.3.5-1ubuntu7.2
 
@@ -33,12 +33,19 @@ CREATE TABLE IF NOT EXISTS `accountBalance` (
   `threshhold` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
 
 --
 -- Dumping data for table `accountBalance`
 --
 
+INSERT INTO `accountBalance` (`id`, `userId`, `balance`, `payoutAddress`, `threshhold`) VALUES
+(33, 36, '0.00', '', ''),
+(32, 35, '0.00', '', ''),
+(31, 34, '0.00', '', ''),
+(30, 33, '0.00', '', ''),
+(29, 32, '0.00', '', ''),
+(28, 31, '0.00', '', '');
 
 -- --------------------------------------------------------
 
@@ -94,12 +101,17 @@ CREATE TABLE IF NOT EXISTS `pool_worker` (
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `pool_worker`
 --
 
+INSERT INTO `pool_worker` (`id`, `associatedUserId`, `username`, `password`) VALUES
+(8, 32, 'Testing .username', 'password'),
+(9, 32, 'Testing .username1', 'password'),
+(11, 35, 'test.username', 'password'),
+(12, 35, 'test.username1', 'password');
 
 -- --------------------------------------------------------
 
@@ -190,9 +202,12 @@ CREATE TABLE IF NOT EXISTS `websiteUsers` (
   `emailAuthorisePin` varchar(64) NOT NULL,
   `authPin` varchar(255) NOT NULL COMMENT 'A pin that must be supplied when changing details to various things',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
 
 --
 -- Dumping data for table `websiteUsers`
 --
 
+INSERT INTO `websiteUsers` (`id`, `isAdmin`, `username`, `password`, `randomSecret`, `sessTimestamp`, `loggedIp`, `email`, `emailAuthorised`, `emailAuthorisePin`, `authPin`) VALUES
+(36, 0, 'test2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 'vJORtMCUTd', 1307314924, '127.0.0.1', 'xennetwork@hotmail.com', 1, 'qz6VGpko8sYbt5z4AgRpPE9i9RooPmL5MIRjY2xWkmXEinzItgX9LXhKFwZkJBgl', '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c'),
+(35, 0, 'test', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 'bv9gA1BjIY', 1307317127, '127.0.0.1', 'xennetwork@hotmail.com', 1, 'JlOD4BStqFwSsdmjtO2O0s6jN9Q19M6IXKbScUbspybHBoRU2KyT2v3GuJytmu1a', '1111');

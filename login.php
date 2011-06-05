@@ -44,7 +44,7 @@
 		<?php
 			}
 		?>
-		<meta http-equiv="refresh" content="1;url=/">
+		<meta http-equiv="refresh" content="3;url=/">
 		<script type="text/javascript" src="/js/swfobject/swfobject.js"></script>
 	</head>
 	<body>

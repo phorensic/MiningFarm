@@ -1,5 +1,5 @@
 <?php
-	if(!$loginSuccess){
+	if($loginSuccess != 1){
 		//No valid cookie show login//
 ?>
 <!--Login Input Field-->
@@ -18,7 +18,7 @@
 	</form>
 </div>
 <?php
-	}else 	if($loginSuccess){
+	}else if($loginSuccess){
 		//Valid cookie YES! Show this user stats//
 ?>
 <div id="userInfo">
@@ -30,11 +30,14 @@
 			echo "Total Pool: <b><i>".$getCredientials->totalPoolShares."</i> shares</b><br/>";
 			echo "Est. Earnings: <b><i>".$getCredientials->estimatedReward."</i> BTC</b>";
 			echo "<hr size='1' width='100%'>";
+		?>
+		<div id="quickStats">
+		<?php
 			echo "Balance: <b><i>".$getCredientials->accountBalance." </i>BTC</b><br/>";
 		
 			//Pool stats
 		?>
-		
+		</div>
 	</span>
 </div>
 <?php

@@ -85,7 +85,8 @@ if($loginSuccess){
 	<head>
 		<title><?php echo outputPageTitle();?> - Main Page</title>
 		<!--This is the main style sheet-->
-		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
+		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
+		<link rel="shortcut icon" href="/images/favicon.png" />
 		<?php
 			//If user isn't logged in load the login.js
 			if(!$loginSuccess){
@@ -117,15 +118,13 @@ if($loginSuccess){
 					
 					<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
 					<span class="returnError"><?php echo $returnError; ?></span><br/>
-					<h2 style="text-decoration:underline;">Workers</h2>
-					<iframe src="/workers.php" width="500" height="150" frameborder="0" allowtransparency="true"></iframe><br/><br/>
-
-					<h2 style="text-decoration:underline;">Identity Details</h2><br/>
+					<br/>
+					<h2 style="text-decoration:underline;">Identity Details</h2>
 					Username: <?php echo $getCredientials->username;?><br/>
 					Confirmed Email: <?php echo $getCredientials->email;?><br/>
 					Confirmed Balance: <?php setlocale(LC_MONETARY, 'en_US');
 									echo money_format('%i', $getCredientials->accountBalance);?>BTC<br/><br/>
-					<h2 style="text-decoration:underline;">Edit your payout</h2><br/>
+					<h2 style="text-decoration:underline;">Edit your payout</h2>
 					<form action="accountDetails.php" method="post">
 						<input type="hidden" name="act" value="editIdentity">
 						Payout Address:<input type="text" size="32" name="payoutAddress" value="<?php echo $getCredientials->sendAddress;?>"><br/>
@@ -133,7 +132,7 @@ if($loginSuccess){
 						<i>Authorisation Pin:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
 						<input type="submit" value="Update Payout Address">
 					</form>
-					<hr size="1" width="100%"><br/><br/>
+					<hr size="1" width="500"><br/><br/>
 
 					<h2 style="text-decoration:underline;">Manual Payout</h2>
 					<form action="accountDetails.php" method="post">
@@ -148,7 +147,10 @@ if($loginSuccess){
 								}?><br/>
 						<input type="submit" value="Execute Payout">
 					</form>
-					<hr size="1" width="100%"><br/><br/>
+					<hr size="1" width="500"><br/><br/>
+					
+					<h2 style="text-decoration:underline;">Workers</h2>
+					<iframe src="/workers.php" width="500" height="250" frameborder="0" allowtransparency="true"></iframe>
 
 				<?php
 					//Output Footer

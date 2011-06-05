@@ -19,12 +19,13 @@ body{
 	width:100%;
 	height:8em;
 	background-color:#104E8B;
-	background-image:url(/images/contentBg-header.png);
+	background-image:url(/images/headerBg.png);
 }
 
 	/*--Menu Box--*/
 		#menuBar{
-			background-image:url(/images/contentBg.png);
+			background-image:url(/images/menuBg.png);
+			background-position:bottom left;
 			background-color:#1874CD;
 			width: 100%;
 			height:2.5em;
@@ -40,7 +41,7 @@ body{
 			div.menuBtn:Hover{
 				float:left;
 				margin-left:1em;
-				background-color:#CAE1FF;
+				background-color:#005177;
 				height:2.5em;
 			}
 	
@@ -52,10 +53,11 @@ body{
 			left:-1em;
 			float:left;
 			background-color:#104E8B;
-			background-image:url(/images/contentBg.png);
+			background-image:url(/images/contentBg-header.png);
 			width:15em;
 			height: 100%;
 			margin-left:1em;
+			padding-top:1em;
 		}
 		
 		#loginForm{
@@ -82,24 +84,31 @@ body{
 			top:0;
 			left:-1em;
 			float:left;
-			background-color:#104E8B;
-			background-image:url(/images/contentBg.png);
+			background-color:#005177;
+			/*background-image:url(/images/contentBg-header.png);*/
 			width:15em;
 			height: 100%;
 			margin-left:1em;
 			padding-top:1em;
+			padding-left:1em;
+		}
+		
+	/*--Quick Stats--*/
+		#quickStats{
+			padding-top:1em;
+			
 		}
 		
 	/*--Blog Post--*/
 		.blogPost{
-			width:56%;
+			width:65em;
 			padding-top:1.5em;
 			/*background-image:url(/images/contentBg-header.png);*/
 		}
 		
 	/*--Footer--*/
 		#footer{
-			width:56%;
+			width:65em;
 			text-align:center;
 			margin-top:3.5em;
 			/*background-image:url(/images/contentBg-header.png);*/
@@ -113,7 +122,6 @@ body{
 			color:#9FB6CD;
 		}
 		a:hover{
-			background-color:#003F87;
 			color:#FFF;
 			font-weight:bold;
 		}
