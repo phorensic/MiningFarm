@@ -11,6 +11,9 @@
 	$getCredientials	= new getCredientials;
 	$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
 
+//Connect to Db
+	connectToDb();
+
 //Perform register if the user isn't already logged in
 	$act =  $_POST["act"];
 	
@@ -53,7 +56,6 @@
 									
 								//Hash auth pin
 									$authPin = hash("sha256", $authPin);
-
 								//Insert user into the `websiteUsers` database and retireve the `id`
 									$insertSuccess = mysql_query("INSERT INTO `websiteUsers`
 														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin`)
@@ -63,17 +65,17 @@
 									$insertId = mysql_insert_id();
 
 									//If user was successfully added to database
-									if($insertSuccess && $insertId > 0){
+									if(isSet($insertSuccess) && $insertId > 0){
 										//Send confirmation email
 												//Get prefix message to write the user
-													$emailMessageQ = mysql_query("SELECT `noreplyEmail`, `confirmEmailPrefix` FROM `websiteSettings`");
+													$emailMessageQ = mysql_query("SELECT `noreplyEmail`, `confirmEmailPrefix` FROM `websiteSettings` LIMIT 0,1");
 													$emailMessageObj = mysql_fetch_object($emailMessageQ);
 													$noreplyEmail = $emailMessageObj->noreplyEmail;
 													$message = $emailMessageObj->confirmEmailPrefix;
 												
 													//Add suffix to the activation link
 														$serverAddress = $_SERVER['HTTP_HOST'];
-														$message .= "\n<br/>http://$serverAddress/activateAccount.php?authPin=$authoriseEmailPin&userId=$insertId";
+														$message .= "\n<br/>Authorization #\n<br/>".$authoriseEmailPin."\n<br/>http://$serverAddress/activateAccount.php";
 											
 												//Send an email with all the information
 													$to      = $email;
@@ -81,14 +83,9 @@
 													$headers = "From: ".$noreplyEmail;
 
 													mail($to, $subject, $message, $headers);
-												
-							
-											if($emailSent){
+
 												$goodMessage = "Registration was a success! | Login to your email, ".$_POST["email"]." and click on link to activate your account!";
 											
-											}else{
-												$returnError = "ERROR | Confirmation email was not sent, Contact the administrator";
-											}
 
 										//Add a zero balance to `accountBalance`
 											mysql_query("INSERT INTO `accountBalance` (`userId`, `balance`)

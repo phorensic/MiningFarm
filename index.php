@@ -1,4 +1,8 @@
 <?php
+//Predefined Global Variables
+	$loginSuccess = 0;
+	$getCredientials = 0;
+
 // Load Linkage Variables //
 	$dir = dirname(__FILE__);
 	$req 		= $dir."/req/";

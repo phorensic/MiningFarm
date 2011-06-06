@@ -106,12 +106,22 @@ body{
 			/*background-image:url(/images/contentBg-header.png);*/
 		}
 		
+	/*--Blog Container--*/
+		#blogContainer{
+			width:65em;
+		}
+		
 	/*--Footer--*/
 		#footer{
 			width:65em;
 			text-align:center;
 			margin-top:3.5em;
 			/*background-image:url(/images/contentBg-header.png);*/
+		}
+		
+	/*--Authorise Email Box--*/
+		#activateEmail{
+			text-align:center;
 		}
 
 

@@ -32,19 +32,22 @@ if($loginSuccess){
 							$threshHold = mysql_real_escape_string($_POST["payoutThreashHold"]);
 							
 							//Validate $payoutAddress is valid;
-								$isValidPaymentArray	= $bitcoinController->validateaddress($payoutAddress);
-								$isValidPayment		= $isValidPaymentArray[0];
+								$openBitcoinClient	= new Bitcoin();
+								$isValidPayment	= $openBitcoinClient->checkAddress($payoutAddress);
+
 								if(!$isValidPayment){
 									//This isn't a valid bitcoin address delete before we stick it in the db
 										$payoutAddress = "";
 										$returnError = "The bitcoin address you supplied was invalid and therefore not updated into the system";
+								}else if($isValidPayment){
+	
+										$updateSuccess = mysql_query("UPDATE `accountBalance` SET `payoutAddress` = '".$payoutAddress."', `threshhold` = '".$threshHold."' WHERE `userId` = '".$getCredientials->userId."'")or die(mysql_error());
+										if($updateSuccess){
+											$goodMessage = "Information was successfully updated!";
+										}else if(!$updateSuccess){
+											$returnError = "Database Error | Contact the admin";
+										}
 								}
-							$updateSuccess = mysql_query("UPDATE `accountBalance` SET `payoutAddress` = '".$payoutAddress."', `threshhold` = '".$threshHold."' WHERE `userId` = '".$getCredientials->userId."'")or die(mysql_error());
-							if($updateSuccess){
-								$goodMessage = "Information was successfully updated!";
-							}else if(!$updateSuccess){
-								$returnError = "Database Error | Contact the admin";
-							}
 					}
 
 					if($act == "manualCashout"){
@@ -71,7 +74,7 @@ if($loginSuccess){
 
 								}else if($accountBalance < $cashOutMin){
 									//No enough funds
-										$returnError = "You must have atleaset <b>".$cashOutMin."BTC</b> to cashout.";
+										$returnError = "The operator thinks it is best to have atleaset <b>".$cashOutMin."BTC</b> to cashout.";
 								}
 					}
 				}else{

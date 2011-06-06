@@ -34,7 +34,7 @@ $rpcHost	= "localhost";
 //Random string Generator
 function genRandomString($length=10){
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";	
-
+	$str = "";
 	$size = strlen( $chars );
 	for( $i = 0; $i < $length; $i++ ) {
 		$str .= $chars[ rand( 0, $size - 1 ) ];
@@ -134,6 +134,16 @@ class getCredientials{
 		public $adminEmail = "";
 
 	function checkLogin($rawCookie){
+		//Make defined
+			$splitCookie = "";
+			$cookieHash = "";
+			$dbTimestamp = "";
+			$dbrandomSecret = "";
+			$dbIp	= "";
+			$dbPassword = "";
+			$dbAuth	= "";
+			$dbisAdmin = "";
+
 		//Make global
 			global $cookieName, $cookiePath, $cookieDomain;
 
@@ -150,15 +160,16 @@ class getCredientials{
 			$cookieHash = $splitCookie[1];
 		
 		//Get database information to match the cookie hash with
-			$dbHashInfoQ = mysql_query("SELECT `sessTimestamp`, `randomSecret`, `loggedIp`, `password`, `authPin`, `isAdmin` FROM `websiteUsers` WHERE `id` = '".$cookieUserid."'");
-			$dbHashInfoObj = mysql_fetch_object($dbHashInfoQ);
-			
-			$dbTimestamp	= $dbHashInfoObj->sessTimestamp;
-			$dbrandomSecret	= $dbHashInfoObj->randomSecret;
-			$dbIp		= $dbHashInfoObj->loggedIp;
-			$dbPassword	= $dbHashInfoObj->password;
-			$dbAuth		= $dbHashInfoObj->authPin;
-			$dbisAdmin	= $dbHashInfoObj->isAdmin;
+			$dbHashInfoQ = mysql_query("SELECT `sessTimestamp`, `randomSecret`, `loggedIp`, `password`, `authPin`, `isAdmin` FROM `websiteUsers` WHERE `id` = '".$cookieUserid."' LIMIT 1");
+
+			while($dbHashInfoObj = mysql_fetch_object($dbHashInfoQ)){
+				$dbTimestamp	= $dbHashInfoObj->sessTimestamp;
+				$dbrandomSecret	= $dbHashInfoObj->randomSecret;
+				$dbIp		= $dbHashInfoObj->loggedIp;
+				$dbPassword	= $dbHashInfoObj->password;
+				$dbAuth		= $dbHashInfoObj->authPin;
+				$dbisAdmin	= $dbHashInfoObj->isAdmin;
+			}
 
 		//Hash database information to check against the already hash cookie.
 			$dbHash = $dbrandomSecret.$dbPassword.$dbIp.$dbTimestamp;
@@ -228,14 +239,14 @@ class getCredientials{
 				connectToDb();
 
 			//Get website settings
-				$websiteSettingsQ = mysql_query("SELECT `header`, `confirmEmail`, `slogan`, `browserTitle`, `cashoutMinimum` FROM `websiteSettings`");
+				$websiteSettingsQ = mysql_query("SELECT `header`, `noreplyEmail`, `slogan`, `browserTitle`, `cashoutMinimum` FROM `websiteSettings`");
 				$websiteSettings = mysql_fetch_object($websiteSettingsQ);
 
 				$this->adminHeader		= $websiteSettings->header;
 				$this->adminSlogan		= $websiteSettings->slogan;
 				$this->adminBrowserTitle	= $websiteSettings->browserTitle;
 				$this->adminCashoutMin		= $websiteSettings->cashoutMinimum;
-				$this->adminEmail		= $websiteSettings->confirmEmail;
+				$this->adminEmail		= $websiteSettings->noreplyEmail;
 		}
 }
 
@@ -252,7 +263,7 @@ function getCashoutMin(){
 
 
 
-function activateAccount($userId, $authPin){
+function activateAccount($username, $authPin){
 		$detailsMatch = 0;
 
 	//Connect to database
@@ -264,12 +275,14 @@ function activateAccount($userId, $authPin){
 
 
 	//Check if details match
-		$detailsMatchQ = mysql_query("SELECT `email` FROM `websiteUsers` WHERE `id` = '$userId' AND `emailAuthorisePin` = '$emailAuthPin'")or die(mysql_error());
+		$detailsMatchQ = mysql_query("SELECT `email`, `id` FROM `websiteUsers` WHERE `username` = '$username' AND `emailAuthorisePin` = '$emailAuthPin'")or die(mysql_error());
 		$detailsMatch = mysql_num_rows($detailsMatchQ);
+		$detailsObj = mysql_fetch_object($detailsMatchQ);
 
 
 		if($detailsMatch > 0){
 			//Activate this account
+				$userId = $detailsObj->id;
 				mysql_query("UPDATE `websiteUsers` SET `emailAuthorised` = '1' WHERE `id` = '$userId'");
 		}
 	return $detailsMatch;

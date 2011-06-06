@@ -9,11 +9,16 @@
 
 
 //Check if supplied deatils match those in the databse
-	$activateSuccess = activateAccount($userId, $authPin);
-	if($activateSuccess > 0){
-		$goodMessage = "Your acount is activated, You can login to your account now";
-	}else{
-		$returnError = "Sorry we couldn't find the account you were looking for";
+	$act = $_POST["act"];
+	if($act == "activate"){
+		$userId = $_POST["username"];
+		$authPin = $_POST["authNumber"];
+		$activateSuccess = activateAccount($userId, $authPin);
+		if($activateSuccess > 0){
+			$goodMessage = "Your acount is activated, You can login to your account now";
+		}else{
+			$returnError = "Sorry we couldn't find the account you were looking for";
+		}
 	}
 ?>
 <html>
@@ -51,6 +56,25 @@
 				<div id="blogContainer">
 						<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
 						<span class="returnError"><?php echo $returnError; ?></span><br/>
+						<div id="activateEmail">
+							<?php
+								$authNumber = "";
+								$username = "Username";
+								if($_POST["authNumber"]){
+									$authNumber = $_POST["authNumber"];
+								}
+								if($_POST["username"]){
+									$username = $_POST["username"];
+								}
+							?>
+							<form action="activateAccount.php" method="post">
+								<input type="hidden" name="act" value="activate"/>
+								<span class="activateEmail">Type in your username &amp; authorization number below</span><br/>
+								<input type="text" value="<?php echo $authNumber; ?>" name="authNumber" value="" size="56"><br/>
+								<input type="text" value="<?php echo $username; ?>" name="username"><br/>
+								<input type="submit" value="Authorise Email">
+							</form>
+						</div>
 				</div>
 				<?php
 					//Output Footer

@@ -30,7 +30,7 @@ if($loginSuccess && $isAdmin){
 
 					mysql_query("UPDATE `websiteSettings` 
 							SET `header` = '".$postHeader."',
-								`confirmEmail` = '".$postEmail."',
+								`noreplyEmail` = '".$postEmail."',
 								`slogan` = '".$postSlogan."',
 								`browserTitle` = '".$postBrowserTitle."',
 								`cashoutMinimum` = '".$postCashOut."'")or die(mysql_error());

@@ -28,8 +28,13 @@ if($loginSuccess){
 				$passwordWorker = $_POST["password"];
 
 			//add workers
-				mysql_query("INSERT INTO `pool_worker` (`associatedUserId`, `username`, `password`)
+				$insertQ = mysql_query("INSERT INTO `pool_worker` (`associatedUserId`, `username`, `password`)
 								VALUES('".$getCredientials->userId."', '".$getCredientials->username.".".$usernameWorker."', '".$passwordWorker."')");
+				
+				$insertWorked = mysql_affected_rows();
+				if($insertWorked == 0){
+						$returnError = "You already have a worker named that";
+				}
 		}
 
 		if($act == "Update Worker"){
@@ -41,6 +46,7 @@ if($loginSuccess){
 				$workerId	= mysql_real_escape_string($_POST["workerId"]);
 
 				$usernameWorker = $getCredientials->username.".".$usernameWorker;
+
 			//update worker
 				mysql_query("UPDATE `pool_worker` SET `username` = '".$usernameWorker."', `password` = '".$passwordWorker."' WHERE `id` = '".$workerId."' AND `associatedUserId` = '".$getCredientials->userId."'")or die(mysql_error());
 		}
@@ -68,6 +74,7 @@ if($loginSuccess){
 		</style>
 	</head>
 	<body>
+		<span class="workersMessages"><?php echo $returnError;?></span>
 		<form action="workers.php" method="post">
 		<input type="text" name="username" value="username"> &middot; <input type="text" name="password" value="password"><input type="submit" name="act" value="Add Worker"><br/>
 		</form><br/>
