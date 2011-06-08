@@ -4,7 +4,7 @@
 		</div>
 <?php
 //Display the following only if $cookieValid
-if($loginSuccess){
+if($loginValid){
 ?>
 	
 		<div class="menuBtn">
@@ -18,6 +18,9 @@ if($loginSuccess){
 ?>
 		<div class="menuBtn">
 			<a href="/adminPanel.php" class="menu">(Admin Panel)</a>
+		</div>
+		<div class="menuBtn">
+			<a href="/adminPanel.php?show=editUsers" class="menu">(Edit Users)</a>
 		</div>
 <?php	
 		}

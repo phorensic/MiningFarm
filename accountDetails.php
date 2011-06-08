@@ -4,17 +4,21 @@
 	$req 		= $dir."/req/";
 	$functions	= $req."functions.php";
 
-//Load Functions
+//Include hashing functions
 	include($functions);
 
 //Include bitcoind functions
 	include($bitcoind);
 
-//Perform login
+//Set user details for userInfo box
+	$rawCookie		= "";
+	if(isSet($_COOKIE[$cookieName])){
+		$rawCookie	= $_COOKIE[$cookieName];
+	}
 	$getCredientials	= new getCredientials;
-	$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
+	$loginValid		= $getCredientials->checkLogin($rawCookie);
 
-if($loginSuccess){
+if($loginValid){
 	//Check which action this user is trying to commence
 		$act = $_POST["act"];
 
@@ -86,7 +90,7 @@ if($loginSuccess){
 ?>
 <html>
 	<head>
-		<title><?php echo outputPageTitle();?> - Main Page</title>
+		<title><?php echo outputPageTitle();?> - Account Details</title>
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
 		<link rel="shortcut icon" href="/images/favicon.png" />

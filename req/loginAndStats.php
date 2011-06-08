@@ -1,5 +1,5 @@
 <?php
-	if($loginSuccess != 1){
+	if($loginValid != 1){
 		//No valid cookie show login//
 ?>
 <!--Login Input Field-->
@@ -18,14 +18,14 @@
 	</form>
 </div>
 <?php
-	}else if($loginSuccess){
+	}else if($loginValid == 1){
 		//Valid cookie YES! Show this user stats//
 ?>
 <div id="userInfo">
 	<span>
 		<?php
 			$getCredientials->getStats();
-			echo "Welcome Back, <i><b>".$getCredientials->username."</b></i><br/><hr size='1' width='100%' /><br/>";
+			echo "Welcome Back <i><b>".$getCredientials->username."</b></i>, <a href='/logout.php'>Logout</a><br/><hr size='1' width='100%' /><br/>";
 			echo "Valid: <b><i>".$getCredientials->totalShares."</i> shares</b><br/>";
 			echo "Total Pool: <b><i>".$getCredientials->totalPoolShares."</i> shares</b><br/>";
 			echo "Est. Earnings: <b><i>".$getCredientials->estimatedReward."</i> BTC</b>";

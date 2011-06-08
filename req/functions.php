@@ -134,9 +134,13 @@ class getCredientials{
 		public $adminEmail = "";
 
 	function checkLogin($rawCookie){
+		
+			
 		//Make defined
-			$splitCookie = "";
+			$explodeCookie = "";
+			$validCookie = 0;
 			$cookieHash = "";
+			$cookieUserid = 0;
 			$dbTimestamp = "";
 			$dbrandomSecret = "";
 			$dbIp	= "";
@@ -147,59 +151,68 @@ class getCredientials{
 		//Make global
 			global $cookieName, $cookiePath, $cookieDomain;
 
-		//Preset vars
-			$validCookie = 0;
-			$ip = $_SERVER['REMOTE_ADDR'];
 
-		//Connect to db
-			connectToDb();
-		
-		//Split cookie into 2
-			$splitCookie = explode("-", $rawCookie);
-			$cookieUserid = mysql_real_escape_string($splitCookie[0]);
-			$cookieHash = $splitCookie[1];
-		
-		//Get database information to match the cookie hash with
-			$dbHashInfoQ = mysql_query("SELECT `sessTimestamp`, `randomSecret`, `loggedIp`, `password`, `authPin`, `isAdmin` FROM `websiteUsers` WHERE `id` = '".$cookieUserid."' LIMIT 1");
+		if(isSet($rawCookie)){
+			//Preset vars
+				$ip = $_SERVER['REMOTE_ADDR'];
 
-			while($dbHashInfoObj = mysql_fetch_object($dbHashInfoQ)){
-				$dbTimestamp	= $dbHashInfoObj->sessTimestamp;
-				$dbrandomSecret	= $dbHashInfoObj->randomSecret;
-				$dbIp		= $dbHashInfoObj->loggedIp;
-				$dbPassword	= $dbHashInfoObj->password;
-				$dbAuth		= $dbHashInfoObj->authPin;
-				$dbisAdmin	= $dbHashInfoObj->isAdmin;
-			}
+			//Connect to db
+				connectToDb();
+			
+			//Split cookie into 2
+				$explodeCookie = explode("-",$rawCookie);
+				$cookieUserid = mysql_real_escape_string($explodeCookie[0]);
+				$cookieHash = mysql_real_escape_string($explodeCookie[1]);
 
-		//Hash database information to check against the already hash cookie.
-			$dbHash = $dbrandomSecret.$dbPassword.$dbIp.$dbTimestamp;
-			$dbHash = hash("sha256", $dbHash);
+			//Get database information to match the cookie hash with
+				$dbHashInfoQ = mysql_query("SELECT `sessTimestamp`, `randomSecret`, `loggedIp`, `password`, `authPin`, `isAdmin` FROM `websiteUsers` WHERE `id` = '".$cookieUserid."' LIMIT 0,1")or die(mysql_error());
+				while($dbHashInfoObj =  mysql_fetch_array($dbHashInfoQ, MYSQL_ASSOC)){
+					$dbTimestamp	= $dbHashInfoObj["sessTimestamp"];
+					$dbrandomSecret	= $dbHashInfoObj["randomSecret"];
+					$dbIp		= $dbHashInfoObj["loggedIp"];
+					$dbPassword	= $dbHashInfoObj["password"];
+					$dbAuth		= $dbHashInfoObj["authPin"];
+					$dbisAdmin	= $dbHashInfoObj["isAdmin"];
+				}
 
-		//Make sure the supplied $ip == $dbIp;
-			if($ip == $dbIp){
-				//Ip address matches now check forthe cookie and database hashes *Cross your fingers :)
-					if($dbHash == $cookieHash){
-						$validCookie = 1;
-						$this->validCookie = 1;
-						$this->userId = $cookieUserid;
-						$this->hashedAuthPin = $dbAuth;
-						$this->isAdmin	= $dbisAdmin;
-					}
-			}
+			//Hash database information to check against the already hash cookie.
+				$dbHash = $dbrandomSecret.$dbPassword.$dbIp.$dbTimestamp;
+				$dbHash = hash("sha256", $dbHash);
 
+			//Make sure the supplied $ip == $dbIp;
+				if($ip == $dbIp){
+					//Ip address matches now check forthe cookie and database hashes *Cross your fingers :)
+						if($dbHash == $cookieHash){
+							$validCookie = 1;
+							$this->validCookie = 1;
+							$this->userId = $cookieUserid;
+							$this->hashedAuthPin = $dbAuth;
+							$this->isAdmin	= $dbisAdmin;
+						}
+				}
+		}
 		return $validCookie;
 	}
 
 
 	function getStats(){
+		//Define the undefined
+			$username = "";
+			$email	= "";
+			$balance = "";
+			$threashhold = 0;
+			$sendAddress = "";
+			$totalShares = 0;
 		//Connect to db
 			connectToDb();
 
 		//Get username for prefix searching
 			$getUsernameQ = mysql_query("SELECT `username`, `email` FROM `websiteUsers` WHERE `id` = '".$this->userId."'");
-			$getUsernameObj = mysql_fetch_object($getUsernameQ);
-			$username	= $getUsernameObj->username;
-			$email		= $getUsernameObj->email;
+			
+			while($getUsernameObj = mysql_fetch_object($getUsernameQ)){
+				$username	= $getUsernameObj->username;
+				$email		= $getUsernameObj->email;
+			}
 
 		//Get number of shares this user has inputted
 			$shareCountQ = mysql_query("SELECT `id` FROM `shares` WHERE `username` LIKE '$username.%'");
@@ -217,9 +230,12 @@ class getCredientials{
 			}
 
 		//Get account balance
-			$balanceQ = mysql_query("SELECT `payoutAddress`, `balance`, `threshhold` FROM `accountBalance` WHERE `userId` = ".$this->userId)or die(mysql_error());
-			$balanceObj = mysql_fetch_object($balanceQ);
-			$balance = $balanceObj->balance;
+			$balanceQ = mysql_query("SELECT `payoutAddress`, `balance`, `threshhold` FROM `accountBalance` WHERE `userId` = ".$this->userId." LIMIT 0,1")or die(mysql_error());
+			while($balanceObj = mysql_fetch_object($balanceQ)){
+				$balance = $balanceObj->balance;
+				$threashhold = $balanceObj->threshhold;
+				$sendAddress = $balanceObj->payoutAddress;
+			}
 
 		//Set stats variables
 			$this->username = $username;
@@ -228,8 +244,8 @@ class getCredientials{
 			$this->estimatedReward = $estReward;
 			$this->accountBalance = $balance;
 			$this->email		= $email;
-			$this->threashhold	= $balanceObj->threshhold;
-			$this->sendAddress	= $balanceObj->payoutAddress;
+			$this->threashhold	= $threashhold;
+			$this->sendAddress	= $sendAddress;
 
 		return true;
 	}

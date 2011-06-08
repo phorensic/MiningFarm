@@ -1,19 +1,20 @@
 <?php
-//Predefined Global Variables
-	$loginSuccess = 0;
-	$getCredientials = 0;
 
 // Load Linkage Variables //
 	$dir = dirname(__FILE__);
 	$req 		= $dir."/req/";
 	$functions	= $req."functions.php";
 
-//Load Functions
+//Include hashing functions
 	include($functions);
-
-//Perform login
+	
+//Set user details for userInfo box
+	$rawCookie		= "";
+	if(isSet($_COOKIE[$cookieName])){
+		$rawCookie	= $_COOKIE[$cookieName];
+	}
 	$getCredientials	= new getCredientials;
-	$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
+	$loginValid	= $getCredientials->checkLogin($rawCookie);
 ?>
 <html>
 	<head>
@@ -23,7 +24,7 @@
 		<link rel="shortcut icon" href="/images/favicon.png" />
 		<?php
 			//If user isn't logged in load the login.js
-			if(!$loginSuccess){
+			if(!$loginValid){
 		?>
 			<script src="/js/login.js"></script>
 		<?php
@@ -60,8 +61,8 @@
 					swfobject.embedSWF("/open-flash-chart.swf", "workerTohashRatio", "500", "200","9.0.0", "expressInstall.swf",{"data-file":"/chartData/hashRateRecent.php"});
 					</script>
 					 
-				</div>
-				
+				</div><br/>
+	
 				<?php
 					//Output Footer
 					include($footer);

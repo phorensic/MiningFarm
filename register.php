@@ -1,4 +1,14 @@
 <?php
+//Define the undefined
+	$goodMessage = "";
+	$returnError = "";
+	$tmpUsername = "";
+	$tmpPassword = "";
+	$tmpPassword2	= "";
+	$tmpEmail	= "";
+	$tmpEmail2	= "";
+	$tmpAuthPin	= "";
+
 // Load Linkage Variables //
 	$dir = dirname(__FILE__);
 	$req 		= $dir."/req/";
@@ -148,32 +158,32 @@
 							<form action="/register.php" method="post">
 								<input type="hidden" name="act" value="signup"/>
 								<?php
-									if($_POST["username"]){
+									if(isSet($_POST["username"])){
 										$tmpUsername	= $_POST["username"];
 									}else{
 										$tmpUsername 	= "";
 									}
-									if($_POST["password"]){
+									if(isSet($_POST["password"])){
 										$tmpPassword	= $_POST["password"];
 									}else{
 										$tmpPassword	= NULL;
 									}
-									if($_POST["password2"]){
+									if(isSet($_POST["password2"])){
 										$tmpPassword2	= $_POST["password2"];
 									}else{
 										$tmpPassword2	= "";
 									}
-									if($_POST["email"]){
+									if(isSet($_POST["email"])){
 										$tmpEmail	= $_POST["email"];
 									}else{
 										$tmpEmail	= "";
 									}
-									if($_POST["email2"]){
+									if(isSet($_POST["email2"])){
 										$tmpEmail2	= $_POST["email2"];
 									}else{
 										$tmpEmail2	= "";
 									}
-									if($_POST["authPin"]){
+									if(isSet($_POST["authPin"])){
 										$tmpAuthPin	= $_POST["authPin"];
 									}else{
 										$tmpAuthPin	= "";

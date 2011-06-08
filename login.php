@@ -1,4 +1,8 @@
 <?php
+//Define the undefined
+	$returnError = "";
+	$goodMessage = "";
+	$loginSuccess = 0;
 //Set page starter variables//
 	$dir = dirname(__FILE__);
 	$req 		= $dir."/req/";
@@ -10,12 +14,19 @@
 //Perform login
 	$loginSuccess = loginUser($_POST["username"], $_POST["password"]);
 
+//Set user details for userInfo box
+	$rawCookie = "";
+	if(isSet($_COOKIE[$cookieName])){
+		$rawCookie = $_COOKIE[$cookieName];
+	}
+	$getCredientials = new getCredientials;
+	$getCredientials->checkLogin($rawCookie);
+	$loginValid	= $getCredientials->validCookie;
+
+
 //Generate message
 	if($loginSuccess == 1){
-		$goodMessage = "Welcome back!, <br/>".$_POST["username"];
-		//Set user details for userInfo box
-			$getCredientials	= new getCredientials;
-			$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
+		$goodMessage = "Welcome back!, <br/>".$_POST["username"];		
 
 	}else if($loginSuccess == 0){
 
@@ -23,7 +34,8 @@
 
 	}else if($loginSuccess == 3){
 
-		$returnError = " Login failed - You haven't authorised your email account yet";
+		$returnError = "Login failed - You haven't authorised your email account yet";
+
 	}else  if($loginSuccess == 4){
 
 			$returnError = "Login failed | You forgot your user name or password";
@@ -36,14 +48,6 @@
 		<title><?php echo outputPageTitle();?> - Main Page</title>
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
-		<?php
-			//If user isn't logged in load the login.js
-			if(!$loginSuccess){
-		?>
-			<script src="/js/login.js"></script>
-		<?php
-			}
-		?>
 		<meta http-equiv="refresh" content="3;url=/">
 		<script type="text/javascript" src="/js/swfobject/swfobject.js"></script>
 	</head>

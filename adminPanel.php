@@ -1,21 +1,30 @@
 <?php
+//Pre define //
+	$show = $_GET['show'];
+	$searchUsername = $_POST['searchUsername'];
+		
+
 // Load Linkage Variables //
 	$dir = dirname(__FILE__);
 	$req 		= $dir."/req/";
 	$functions	= $req."functions.php";
 
-//Load Functions
+//Include hashing functions
 	include($functions);
 
 //Include bitcoind functions
 	include($bitcoind);
 
-//Perform login
+//Set user details for userInfo box
+	$rawCookie		= "";
+	if(isSet($_COOKIE[$cookieName])){
+		$rawCookie	= $_COOKIE[$cookieName];
+	}
 	$getCredientials	= new getCredientials;
-	$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
+	$loginValid		= $getCredientials->checkLogin($rawCookie);
 
 	$isAdmin = $getCredientials->isAdmin;
-if($loginSuccess && $isAdmin){
+	if($loginValid && $isAdmin){
 		//Check if there was an action
 		$act = $_POST["act"];
 		$hashedAuthInput = hash("sha256", $_POST["authPin"]);
@@ -39,12 +48,47 @@ if($loginSuccess && $isAdmin){
 		}else if($act && $hashAuthInput != $getCredientials->hashedAuthPin){
 			$returnError = "Auth pin was not valid!";
 		}
+
+		//Check if $show was set, and figure out what to show
+		if($show == "updateSearchedUsers"){
+			//Go through array of users and update the list of users to disable
+				$postUserIds = $_POST["userIdArray"];
+				$postUserIds = explode(",", $postUserIds);
+				$numIds = count($postUserIds);
+
+			//Update output variables
+				$updatedOutput = "";
+
+				for($i=0; $i < $numIds; $i++){
+					//Find the selection the admin specified, and set to enable/disabled based on the selction
+							$tmpUserId		= $postUserIds[$i];
+							$selectedInput		=  $_POST["user".$postUserIds[$i]];
+							$selectInput 		= mysql_real_escape_string($selectedInput);
+							if($selectedInput == "on"){
+								//We want to update it to disabled
+									mysql_query("UPDATE `websiteUsers` SET `disabled` = 1 WHERE `id` = '".$tmpUserId."' LIMIT 1")or die(mysql_error());
+									$updateOutput .='<span class="goodMessage">Set userId '.$tmpUserId.' to Disabled</span><br/>';
+						
+							}else if($selectedInput == ""){
+								//We want to update it to enabled
+									mysql_query("UPDATE `websiteUsers` SET `disabled` = 0 WHERE `id` = '".$tmpUserId."' LIMIT 1")or die(mysql_error());
+									$updateOutput .='<span class="goodMessage">Set userId '.$tmpUserId.' to Enable</span><br/>';
+							}
+				}
+
+			//Simulate search
+				$show = "searchUsers";
+				$searchUsername = $_GET["searchUsername"];
+		}
+
 ?>
 <html>
 	<head>
-		<title><?php echo outputPageTitle();?> - Main Page</title>
+		<title><?php echo outputPageTitle();?> - Admin Dashboard</title>
 		<!--This is the main style sheet-->
-		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
+		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
+		<script type="text/javascript" src="/js/tooltipFollower.js">
+		</script> 
 		<?php
 			//If user isn't logged in load the login.js
 			if(!$loginSuccess){
@@ -89,6 +133,13 @@ if($loginSuccess && $isAdmin){
 					
 					<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
 					<span class="returnError"><?php echo $returnError; ?></span><br/>
+					<div id="tooltip">&nbsp;</div>
+
+				<?php
+					//Decide what we want to display based on what $act says
+					////////////////////////////////////////////////////////
+					if($show == ""){
+				?>
 					<h2 style="text-decoration:underline;">Website Settings</h2>
 						<form action="?" method="post">
 							<input type="hidden" name="act" value="websiteSettings">
@@ -104,6 +155,50 @@ if($loginSuccess && $isAdmin){
 					<hr size="1" width="100%"><br/><br/>
 					<h2 style="text-decoration:underline;">In-Depth Graphs (Comming v3.1)</h2>
 				<?php
+					}else if($show == "editUsers"){
+				?>
+					<h2 style="text-decoration:underline;">Search for a user (% = Wildcard)</h2>
+						<form action="?show=searchUsers" method="post">
+							By username:<input type="text" name="searchUsername" value=""/><br/>
+							<input type="submit" value="Search For user">
+						</form>
+				<?php
+					}else if($show == "searchUsers"){
+				?>
+					<div class=
+						echo $updateOutput;
+				?>
+					<h2 style="text-decoration:underline;">Search for a user (% = Wildcard)</h2>
+						<form action="?show=searchUsers" method="post">
+							By username:<input type="text" name="searchUsername" value=""/><br/>
+							<input type="submit" value="Search For user">
+						</form><br/><br/>
+				<?php
+							$searchUsername = mysql_real_escape_string($searchUsername);
+						//Query for a list of users that match this username
+							$searchQ = mysql_query("SELECT `disabled`, `email`, `username`, `id`, `loggedIp` FROM `websiteUsers` WHERE `username` LIKE '".$searchUsername."'");
+				?>
+					<form action="?show=updateSearchedUsers&searchUsername=<?php echo $searchUsername;?>" method="post">
+					<h2 style="text-decoration:underline;">Results for <i><?php echo $searchUsername; ?></i></h2>
+					<input type="submit" value="Execute Changes"><br/>
+						<?php
+							$userIdArray = "";
+							//List output from $searchQ;
+							while($user = mysql_fetch_array($searchQ)){
+						?>
+							<?php echo $user["username"]." &middot; ".$user["email"];?> 
+							<input type="checkbox" name="user<?php echo $user["id"];?>" <?php if($user["disabled"]){ echo "checked";}?> onMouseOver="showTooltip('<span style=\'color:red;\'>Disable</span> this user');" onMouseOut="hideTooltip();"/><br/> 
+						<?php
+								//Make array of userId's to post
+									if($userIdArray != ""){
+										$userIdArray .= ",";
+									}
+									$userIdArray .= $user["id"];
+							}
+						?>
+							<input type="hidden" name="userIdArray" value="<?php echo $userIdArray;?>"/>
+				<?php
+					}
 					//Output Footer
 					include($footer);
 					///////////////
