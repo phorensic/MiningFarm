@@ -46,7 +46,7 @@
 			
 			}
 		}else if($act && $hashAuthInput != $getCredientials->hashedAuthPin){
-			$returnError = "Auth pin was not valid!";
+			$returnError = gettext("Auth pin was not valid!");
 		}
 
 		//Check if $show was set, and figure out what to show
@@ -67,12 +67,12 @@
 							if($selectedInput == "on"){
 								//We want to update it to disabled
 									mysql_query("UPDATE `websiteUsers` SET `disabled` = 1 WHERE `id` = '".$tmpUserId."' LIMIT 1")or die(mysql_error());
-									$updateOutput .='<span class="goodMessage">Set userId '.$tmpUserId.' to Disabled</span><br/>';
+									$updateOutput .='<span class="goodMessage">'.gettext("Set userId ").$tmpUserId.gettext(' to Disabled').'</span><br/>';
 						
 							}else if($selectedInput == ""){
 								//We want to update it to enabled
 									mysql_query("UPDATE `websiteUsers` SET `disabled` = 0 WHERE `id` = '".$tmpUserId."' LIMIT 1")or die(mysql_error());
-									$updateOutput .='<span class="goodMessage">Set userId '.$tmpUserId.' to Enable</span><br/>';
+									$updateOutput .='<span class="goodMessage">'.gettext('Set userId ').$tmpUserId.gettext(' to Enable').'</span><br/>';
 							}
 				}
 
@@ -84,7 +84,7 @@
 ?>
 <html>
 	<head>
-		<title><?php echo outputPageTitle();?> - Admin Dashboard</title>
+		<title><?php echo outputPageTitle();?> - <?php echo gettext("Admin Dashboard");?></title>
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
 		<script type="text/javascript" src="/js/tooltipFollower.js">
@@ -140,20 +140,19 @@
 					////////////////////////////////////////////////////////
 					if($show == ""){
 				?>
-					<h2 style="text-decoration:underline;">Website Settings</h2>
+					<h2 style="text-decoration:underline;"><?php echo gettext("Website Settings");?></h2>
 						<form action="?" method="post">
 							<input type="hidden" name="act" value="websiteSettings">
-							Browser Title:<input type="text" id="browserTitleInput" name="browserTitle" value="<?php echo $getCredientials->adminBrowserTitle;?>" onKeyPress="updateBrowserTitle();" onKeyUp="updateBrowserTitle();" onKeyDown="updateBrowserTitle();"><br/>
-							Header:<input type="text" name="header" value="<?php echo $getCredientials->adminHeader;?>" id="headerInput" onKeyPress="updateHeader();" onKeyUp="updateHeader();" onKeyDown="updateHeader();"><br/>
-							Slogan:<input type="text" name="slogan" value="<?php echo $getCredientials->adminSlogan;?>" id="sloganInput" onKeyPress="updateSlogan();" onKeyUp="updateSlogan();" onKeyDown="updateSlogan()"><br/>
-							Cashout Minimum:<input type="text" name="cashoutMin" value="<?php echo $getCredientials->adminCashoutMin;?>" size="4" maxlength="10"><br/>
-							Confirmation Email: <input type="text" name="confirmEmail" value="<?php echo $getCredientials->adminEmail;?>"><br/>
+							<?php echo gettext("Browser Title");?>:<input type="text" id="browserTitleInput" name="browserTitle" value="<?php echo $getCredientials->adminBrowserTitle;?>" onKeyPress="updateBrowserTitle();" onKeyUp="updateBrowserTitle();" onKeyDown="updateBrowserTitle();"><br/>
+							<?php echo gettext("Header");?>:<input type="text" name="header" value="<?php echo $getCredientials->adminHeader;?>" id="headerInput" onKeyPress="updateHeader();" onKeyUp="updateHeader();" onKeyDown="updateHeader();"><br/>
+							<?php echo gettext("Solgan");?>:<input type="text" name="slogan" value="<?php echo $getCredientials->adminSlogan;?>" id="sloganInput" onKeyPress="updateSlogan();" onKeyUp="updateSlogan();" onKeyDown="updateSlogan()"><br/>
+							<?php echo gettext("Cashout Minimum");?>:<input type="text" name="cashoutMin" value="<?php echo $getCredientials->adminCashoutMin;?>" size="4" maxlength="10"><br/>
+							<?php echo gettext("Confirm Email");?>: <input type="text" name="confirmEmail" value="<?php echo $getCredientials->adminEmail;?>"><br/>
 							<br/>
-							Auth Number:<input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
-							<input type="submit" value="Update Website Settings"/>
+							<?php echo gettext("Auth Pin");?>:<input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
+							<input type="submit" value="<?php echo gettext("Update Website Settings");?>" />
 						</form>
 					<hr size="1" width="100%"><br/><br/>
-					<h2 style="text-decoration:underline;">In-Depth Graphs (Comming v3.1)</h2>
 				<?php
 					}else if($show == "editUsers"){
 				?>
@@ -165,9 +164,7 @@
 				<?php
 					}else if($show == "searchUsers"){
 				?>
-					<div class=
-						echo $updateOutput;
-				?>
+					<div class=<?php echo $updateOutput;?>
 					<h2 style="text-decoration:underline;">Search for a user (% = Wildcard)</h2>
 						<form action="?show=searchUsers" method="post">
 							By username:<input type="text" name="searchUsername" value=""/><br/>

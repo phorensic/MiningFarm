@@ -22,9 +22,19 @@ $fromAddress = "Localhost@Localhost.com";
 
 //Bitcoind RPC information
 $rpcType	= "http";
-$rpcUsername	= "xenland";
-$rpcPassword 	= "fuckyou"; //I dont purposely put this to offend anyone, its just easy to remember
+$rpcUsername	= "bitcoins";
+$rpcPassword 	= "lolsalad";
 $rpcHost	= "localhost";
+
+//Locali
+$language = 'pt_BR';
+putenv("LANG=$language");
+setlocale(LC_ALL, $language);
+
+//Set the text domain as 'messages'
+$domain = 'messages';
+bindtextdomain($domain, $dir."/req/language/");
+textdomain($domain);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -125,6 +135,7 @@ class getCredientials{
 		public $email = "";
 		public $sendAddress = "";
 		public $threshHold = 0;
+		public $apiToken = "";
 
 	//Admin variables
 		public $adminHeader = "";
@@ -165,7 +176,7 @@ class getCredientials{
 				$cookieHash = mysql_real_escape_string($explodeCookie[1]);
 
 			//Get database information to match the cookie hash with
-				$dbHashInfoQ = mysql_query("SELECT `sessTimestamp`, `randomSecret`, `loggedIp`, `password`, `authPin`, `isAdmin` FROM `websiteUsers` WHERE `id` = '".$cookieUserid."' LIMIT 0,1")or die(mysql_error());
+				$dbHashInfoQ = mysql_query("SELECT `sessTimestamp`, `randomSecret`, `loggedIp`, `password`, `authPin`, `isAdmin`, `apiToken` FROM `websiteUsers` WHERE `id` = '".$cookieUserid."' LIMIT 0,1")or die(mysql_error());
 				while($dbHashInfoObj =  mysql_fetch_array($dbHashInfoQ, MYSQL_ASSOC)){
 					$dbTimestamp	= $dbHashInfoObj["sessTimestamp"];
 					$dbrandomSecret	= $dbHashInfoObj["randomSecret"];
@@ -173,6 +184,7 @@ class getCredientials{
 					$dbPassword	= $dbHashInfoObj["password"];
 					$dbAuth		= $dbHashInfoObj["authPin"];
 					$dbisAdmin	= $dbHashInfoObj["isAdmin"];
+					$dbApiToken	= $dbHashInfoObj["apiToken"];
 				}
 
 			//Hash database information to check against the already hash cookie.
@@ -188,6 +200,7 @@ class getCredientials{
 							$this->userId = $cookieUserid;
 							$this->hashedAuthPin = $dbAuth;
 							$this->isAdmin	= $dbisAdmin;
+							$this->apiToken = $dbApiToken;
 						}
 				}
 		}
@@ -207,7 +220,7 @@ class getCredientials{
 			connectToDb();
 
 		//Get username for prefix searching
-			$getUsernameQ = mysql_query("SELECT `username`, `email` FROM `websiteUsers` WHERE `id` = '".$this->userId."'");
+			$getUsernameQ = mysql_query("SELECT `username`, `email` FROM `websiteUsers` WHERE `id` = '".$this->userId."' LIMIT 0,1");
 			
 			while($getUsernameObj = mysql_fetch_object($getUsernameQ)){
 				$username	= $getUsernameObj->username;
@@ -216,7 +229,7 @@ class getCredientials{
 
 		//Get number of shares this user has inputted
 			$shareCountQ = mysql_query("SELECT `id` FROM `shares` WHERE `username` LIKE '$username.%'");
-			$numShares = mysql_num_rows($shareCountQ);
+			$totalShares = mysql_num_rows($shareCountQ);
 
 		//Get number of total pool shares
 			$totalPoolSharesQ = mysql_query("SELECT `id` FROM `shares`");
@@ -225,7 +238,7 @@ class getCredientials{
 		//Get estimated earnings
 			$estReward = 0;
 			if($totalPoolShares > 0 && $totalShares > 0){
-				$estReward = $totalPoolShares/$numShares;
+				$estReward = $totalPoolShares/$totalShares;
 				$estReward = 50*$estReward;
 			}
 
@@ -237,9 +250,29 @@ class getCredientials{
 				$sendAddress = $balanceObj->payoutAddress;
 			}
 
+		//Get pending balance/unconfirmed blocks balance
+			//Select all the blocks this user was contributing shares towards
+				$blockListQ = mysql_query("SELECT DISTINCT `blockNumber` FROM `shares_history` WHERE `username` LIKE '".$username.".%'");
+				$totalUserShares = 0;
+				$totalPoolShares = 0;
+				while($blockList = mysql_fetch_array($blockListQ)){
+					//With this selected block number find all the shares that this user subbmitted
+					//and then get the total number of shares for that block and calculate unconfirmed balace from there
+						//Get total User shares this block/round
+							$tmpTotalUserSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$blockList["blockNumber"]."' AND `username` = '".$username.".%'");
+							$tmpTotalUserShares = mysql_num_rows($tmpTotalUserSharesQ);
+						
+						//get total pool shares
+							$tmpTotalPoolSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$blockList["blockNumber"]."'");
+					
+						//add it up
+							$totalUserShares += $tmpTotalUserShares;
+							$totalPoolShares += $tmpTotalPoolShares;
+				}
+
 		//Set stats variables
 			$this->username = $username;
-			$this->totalShares = $numShares;
+			$this->totalShares = $totalShares;
 			$this->totalPoolShares = $totalPoolShares;
 			$this->estimatedReward = $estReward;
 			$this->accountBalance = $balance;
@@ -344,19 +377,22 @@ function outputHeaderSlogan(){
 }
 
 //Output the blog
-function blogPosts(){
+function blogPosts($isAdmin=0){
 	//Connect to databse
 		connectToDb();
 
 	//Get blog posts
-		$blogPostsQ = mysql_query("SELECT `timestamp`, `title`, `message` FROM `blogPosts` ORDER BY `timestamp` DESC");
+		$blogPostsQ = mysql_query("SELECT `id`, `timestamp`, `title`, `message` FROM `blogPosts` ORDER BY `timestamp` DESC");
 		while($blog = mysql_fetch_array($blogPostsQ)){
 	?>
 			<div class="blogPost">
-				<h2 style="text-decoration:underline;"><?php echo $blog["title"]." | ".date("M,d Y g:ja", $blog["timestamp"]);?></h2><br/>
+				<form action="/index.php" method="post">
+				<input type="hidden" name="postId" value="<?php echo $blog["id"]; ?>"/>
+				<h2 style="text-decoration:underline;"><?php echo $blog["title"]." | ".date("M,d Y g:ja", $blog["timestamp"]);?></h2><?php if($isAdmin){?><input type="submit" name="act" value="Edit Post"> <input type="submit" name="act" value="Delete Post"><?php } ?><br/>
 				<?php echo $blog["message"]?>
+				</form>
 			</div>
 	<?php
-						}
+		}
 }
 ?>

@@ -35,7 +35,8 @@ setcookie($cookieName, "", time()-9999);
 				?>
 				<div class="loginMessages">
 					<span class="goodMessage">
-					Redirecting you to your regularly scheduled program</span>
+					<?php echo gettext("Redirecting you to your regularly scheduled program");?>
+					</span>
 				</div>
 			</div>
 		</div>

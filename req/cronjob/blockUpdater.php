@@ -1,4 +1,7 @@
 <?php
+//Comment the following line when debuging this page.
+error_reporting(0);
+
 // Load Linkage Variables //
 	$dir = dirname(__FILE__);
 	$dir		= str_replace("/req/cronjob", "", $dir);
@@ -29,12 +32,12 @@
 			//Add this block into the `networkBlocks` log
 				$currentTime = time();
 				mysql_query("INSERT INTO `networkBlocks` (`blockNumber`, `timestamp`)
-									VALUE('$currentBlockNumber', '$currentTime')");
+									VALUE('$currentBlockNumber', '$currentTime')")or die(mysql_error());
 		}
 
 
 
-//The following has nothing to do with updating the blocks but it DOES go through all the account balances of more then the minimumCashout 
+//The following has nothing to do with updating the blocks but it DOES execute the auto instant payment for every users that has there threshold set
 	//Get minimum cashout
 		$minimumCashoutQ = mysql_query("SELECT `cashoutMinimum` FROM `websiteSettings`");
 		$minimumCashoutObj = mysql_fetch_object($minimumCashoutQ);

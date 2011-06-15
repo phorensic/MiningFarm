@@ -26,26 +26,26 @@
 
 //Generate message
 	if($loginSuccess == 1){
-		$goodMessage = "Welcome back!, <br/>".$_POST["username"];		
+		$goodMessage = gettext("Welcome back!, <br/>").$_POST["username"];		
 
 	}else if($loginSuccess == 0){
 
-		$returnError = "LOGIN FAILED | WHAT DID YOU DO!?";
+		$returnError = gettext("LOGIN FAILED | WHAT DID YOU DO!?");
 
 	}else if($loginSuccess == 3){
 
-		$returnError = "Login failed - You haven't authorised your email account yet";
+		$returnError = gettext("Login failed - You haven't authorised your email account yet");
 
 	}else  if($loginSuccess == 4){
 
-			$returnError = "Login failed | You forgot your user name or password";
+			$returnError = gettext("Login failed | You forgot your user name or password");
 	}
 
 
 ?>
 <html>
 	<head>
-		<title><?php echo outputPageTitle();?> - Main Page</title>
+		<title><?php echo outputPageTitle();?> - <?php echo $returnError;?></title>
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
 		<meta http-equiv="refresh" content="3;url=/">

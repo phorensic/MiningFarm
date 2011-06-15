@@ -133,6 +133,22 @@ html{
 		#activateEmail{
 			text-align:center;
 		}
+	
+	/*--Body Content--*/
+		#bodyContent{
+			width:50em;
+		}
+		
+	/*--Body Side Content--*/
+		#sideContent{
+			width:30em;
+			position:absolute;
+			top:13em;
+			left:48em;
+			
+			font-weight:bold;
+ 		} 
+
 
 
 /*--Text Style--*/
@@ -192,23 +208,35 @@ html{
 	/*--Login Messages--*/
 		.loginMessages{
 			padding:3em;
-			font-size:1.5em;
+			font-size:1.2em;
 		}
 		
-/*--Misc--*/
-#tooltip{
-	position:absolute; 
-	overflow:hidden;
-	visibility: hidden;
-	z-index:999; 
-	width:auto; 
-	height:auto;
-	padding:.2em;
-	background-color:#FFCC33;
-	border: 1px dashed #000;
-	color:#000
-}
+	/*--Account Details--*/
+		h3.accountHeader{
+			text-decoration:underline;
+			font-size:1.5em;
+		}
+	/*--Misc--*/
+	#tooltip{
+		position:absolute; 
+		overflow:hidden;
+		visibility: hidden;
+		z-index:999; 
+		width:auto; 
+		height:auto;
+		padding:.2em;
+		background-color:#FFCC33;
+		border: 1px dashed #000;
+		color:#000
+	}
 
-/*--Stats--*/
-.stats{
-}
+	/*--Stats--*/
+	.stats{
+	}
+	
+		/*--Worker Stats--*/
+			.notConnected{
+				color:#FF5959;
+				font-weight:bolder;
+				font-style: italic;
+			}

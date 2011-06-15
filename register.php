@@ -33,11 +33,9 @@
 				$validCredentials = 1;
 				if($_POST["password"] != $_POST["password2"]){
 					$validCredentials = 0;
-					echo "password fail";
 				}
 				if($_POST["email"] != $_POST["email2"]){
 					$validCredentials = 0;
-					echo "email fail";
 				}
 
 				if(strlen($_POST["authPin"]) < 4){
@@ -63,13 +61,29 @@
 
 								//Generate an authoriseEmailPin
 									$authoriseEmailPin = genRandomString(64);
+
+								//Generate an API Token
+									$apiToken = genRandomString(64);
+									//Check if anyone else has this token (doubtfull but on a long enough timeline anything can happen)
+										for($i=0; $i < 999; $i++){
+											$tokenTaken = mysql_query("SELECT `id` FROM `websiteUsers` WHERE `apiToken` = '".$apiToken."' LIMIT 0,1");
+											$tokenIsTaken = mysql_num_rows($tokenTaken);
+
+											if($tokenIsTaken){
+												//Generate another token
+													$apiToken = genRandomString(64);
+											}else if(!$tokenIsTaken){
+												//Stop the loop, we've found good api token
+													$i=1000;
+											}
+										}	
 									
 								//Hash auth pin
 									$authPin = hash("sha256", $authPin);
 								//Insert user into the `websiteUsers` database and retireve the `id`
 									$insertSuccess = mysql_query("INSERT INTO `websiteUsers`
-														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin`)
-													VALUES('$username', '$hashedPassword', '$authoriseEmailPin', '$email', '$authPin')") or die(mysql_error());
+														(`username`, `password` , `emailAuthorisePin`, `email`, `authPin`, `apiToken`)
+													VALUES('$username', '$hashedPassword', '$authoriseEmailPin', '$email', '$authPin', '$apiToken')") or die(mysql_error());
 									
 									//Get userId
 									$insertId = mysql_insert_id();
@@ -94,29 +108,29 @@
 
 													mail($to, $subject, $message, $headers);
 
-												$goodMessage = "Registration was a success! | Login to your email, ".$_POST["email"]." and click on link to activate your account!";
+												$goodMessage = gettext("Registration was a success! | Login to your email, ").$_POST["email"].gettext(" and click on link to activate your account!");
 											
 
 										//Add a zero balance to `accountBalance`
 											mysql_query("INSERT INTO `accountBalance` (`userId`, `balance`)
 																VALUES('".$insertId."', '0.00')");
 									}else{
-										$returnError = "Database error | User was not added to database, Please contact the admin.";
+										$returnError = gettext("Database error | User was not added to database, Please contact the admin.");
 									}
 							}else if($usernameExists > 0){
-								$returnError = "That username is already registered with us";
+								$returnError = gettext("That username is already registered with us");
 							}
 				}else if($validCredentials == 0){
-					$returnError = "Please check that you passwords match as well as your email; Auth Pin must be numbers only and 4 digits long no more, no less.";
+					$returnError = gettext("Please check that you passwords match as well as your email; Auth Pin must be numbers only and 4 digits long no more, no less.");
 				}
 		}else{
-			$returnError = "You are already have an account with us.";
+			$returnError = gettext("You are already have an account with us.");
 		}
 	}
 ?>
 <html>
 	<head>
-		<title><?php echo outputPageTitle();?> - Main Page</title>
+		<title><?php echo outputPageTitle();?> - <?php echo gettext("Sign up");?></title>
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
 		<?php
@@ -153,7 +167,7 @@
 
 						if($goodMessage == ""){
 					?>
-							<h2 id="registerHeader">We just need a few details</h2><br/>
+							<h2 id="registerHeader"><?php echo gettext("We just need a few details");?></h2><br/>
 							
 							<form action="/register.php" method="post">
 								<input type="hidden" name="act" value="signup"/>
@@ -189,15 +203,15 @@
 										$tmpAuthPin	= "";
 									}
 								?>
-								Username:<input type="text" name="username" value="<?php echo $tmpUsername; ?>" maxlength="20" size="10"/><br/>
-								Password:<input type="password" name="password" value="<?php echo $tmpPassword;?>" maxlength="45" size="10"/><br/>
-								Retype Password:<input type="password" name="password2" value="<?php echo $tmpPassword2;?>" maxlength="45" size="10"/><br/>
+								<?php echo gettext("Username");?>:<input type="text" name="username" value="<?php echo $tmpUsername; ?>" maxlength="20" size="10"/><br/>
+								<?php echo gettext("Password");?>:<input type="password" name="password" value="<?php echo $tmpPassword;?>" maxlength="45" size="10"/><br/>
+								<?php echo gettext("Retype Password");?>:<input type="password" name="password2" value="<?php echo $tmpPassword2;?>" maxlength="45" size="10"/><br/>
 								<hr size="1" width="100%"><br/>
-								Real Email: <input type="text" name="email" value="<?php echo $tmpEmail;?>" size="15"/><br/>
-								Retype Email: <input type="text" name="email2" value="<?php echo $tmpEmail2;?>" size="15"/><br/>
+								<?php echo gettext("Real Email");?>: <input type="text" name="email" value="<?php echo $tmpEmail;?>" size="15"/><br/>
+								<?php echo gettext("Retype Email");?>l: <input type="text" name="email2" value="<?php echo $tmpEmail2;?>" size="15"/><br/>
 								<hr size="1" width="100%"><br/>
-								Authorization Pin: <input type="password" name="authPin" value="<?php echo $tmpAuthPin;?>" size="4" maxlength="4">(Memorize this 4 digit pin #)<br/>
-								<input type="submit" value="Register">
+								<?php echo gettext("Authorization Pin");?>: <input type="password" name="authPin" value="<?php echo $tmpAuthPin;?>" size="4" maxlength="4"><?php echo gettext("(Memorize this 4 digit pin #)");?><br/>
+								<input type="submit" value="<?php echo gettext("Sign Me Up!");?>">
 							</form>
 					<?php
 						}

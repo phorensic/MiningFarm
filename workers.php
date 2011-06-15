@@ -15,13 +15,17 @@
 	$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
 
 if($loginSuccess){
+
 	//Connect to db
 		connectToDb();
-
+	
+	//Get user information
+		$getCredientials->getStats();
+		
 	//Figure out which action the user is trying to do
 		$act = $_POST["act"];
 		if($act == "Add Worker"){
-				$getCredientials->getStats();
+				
 
 			//Mysql Injection Protection
 				$usernameWorker = $_POST["username"];
@@ -33,12 +37,11 @@ if($loginSuccess){
 				
 				$insertWorked = mysql_affected_rows();
 				if($insertWorked == 0){
-						$returnError = "You already have a worker named that";
+						$returnError = gettext("You already have a worker named that");
 				}
 		}
 
 		if($act == "Update Worker"){
-				$getCredientials->getStats();
 			
 			//Mysql Injection Protection
 				$usernameWorker = mysql_real_escape_string($_POST["username"]);
@@ -52,7 +55,6 @@ if($loginSuccess){
 		}
 
 		if($act == "Delete Worker"){
-				$getCredientials->getStats();
 
 			//Mysql Injection Protection
 				$workerId = mysql_real_escape_string($_POST["workerId"]);
@@ -82,14 +84,35 @@ if($loginSuccess){
 		</form>
 		<?php
 			//Get and show list of workers along with a <form> to add more workers
+				//Get time 5 minutes ago
+					$timeFiveMinutesAgo = time();
+					$timeFiveMinutesAgo -= 60*5;
+					
 				$listWorkersQ = mysql_query("SELECT `id`, `username`, `password` FROM `pool_worker` WHERE `associatedUserId` = '".$getCredientials->userId."' ORDER BY `id` DESC")or die(mysql_error());
+
 				while($worker = mysql_fetch_array($listWorkersQ)){
-					$splitUser = explode(".", $worker["username"]);
+					//Get this workers recent average Mhashes (If any recently)
+						$getMhashes = mysql_query("SELECT `mhashes` FROM `stats_userMHashHistory` WHERE `username` = '".$worker["username"]."' AND `timestamp` >= '$timeFiveMinutesAgo' ORDER BY `timestamp` DESC");
+						$numHashes = mysql_num_rows($getMhashes);
+						$totalMhashes = 0;
+						while($mhashes = mysql_fetch_array($getMhashes)){
+							$totalMhashes += $mhashes["mhashes"];
+						}
+						
+						//Prevent division by zero
+							if($totalMhashes > 0 && $totalMhashes > 0){
+								$averageHashes = $totalMhashes/$numHashes;
+							}else if($totalMhashes == 0 || $totalMhashes == 0){
+								$averageHashes = "<span class=\"notConnected\">".gettext("Not connected")."</span>";
+							}
+							
+					//Split username for user input
+						$splitUser = explode(".", $worker["username"]);
 		?>
 		<form action="workers.php" method="post">
 			<input type="hidden" name="workerId" value="<?=$worker["id"]?>">
-			<?php echo $splitUser[0]; ?>.<input type="text" name="username" value="<?php echo $splitUser[1]; ?>" size="10"> <input type="text" name="password" value="<?php echo $worker["password"];?>" size="10"><input type="submit" name="act" value="Update Worker"><input type="submit" name="act" value="Delete Worker"/>
-			800Mhash/s
+			<?php echo $splitUser[0]; ?>.<input type="text" name="username" value="<?php echo $splitUser[1]; ?>" size="10"> <input type="text" name="password" value="<?php echo $worker["password"];?>" size="10"><input type="submit" name="act" value="<?php echo gettext("Update");?>"><input type="submit" name="act" value="<?php echo gettext("Delete");?>"/><br/>
+			<span class="workerMhash"><?php echo $averageHashes; ?> MHash/s</span>
 		</form>
 		<hr size="1" width="100%"><br/>
 		<?php
