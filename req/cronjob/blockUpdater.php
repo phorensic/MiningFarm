@@ -1,6 +1,6 @@
 <?php
 //Comment the following line when debuging this page.
-error_reporting(0);
+//error_reporting(0);
 
 // Load Linkage Variables //
 	$dir = dirname(__FILE__);

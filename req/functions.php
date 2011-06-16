@@ -27,8 +27,8 @@ $rpcPassword 	= "lolsalad";
 $rpcHost	= "localhost";
 
 //Locali
-$language = 'pt_BR';
-putenv("LANG=$language");
+$language = 'en';
+putenv("LANG=$language.utf8");
 setlocale(LC_ALL, $language);
 
 //Set the text domain as 'messages'
@@ -238,8 +238,8 @@ class getCredientials{
 		//Get estimated earnings
 			$estReward = 0;
 			if($totalPoolShares > 0 && $totalShares > 0){
-				$estReward = $totalPoolShares/$totalShares;
-				$estReward = 50*$estReward;
+				$estReward = $totalShares/$totalPoolShares;
+				$estReward = round(50*$estReward, 2);
 			}
 
 		//Get account balance
@@ -250,24 +250,21 @@ class getCredientials{
 				$sendAddress = $balanceObj->payoutAddress;
 			}
 
-		//Get pending balance/unconfirmed blocks balance
-			//Select all the blocks this user was contributing shares towards
-				$blockListQ = mysql_query("SELECT DISTINCT `blockNumber` FROM `shares_history` WHERE `username` LIKE '".$username.".%'");
-				$totalUserShares = 0;
-				$totalPoolShares = 0;
-				while($blockList = mysql_fetch_array($blockListQ)){
-					//With this selected block number find all the shares that this user subbmitted
-					//and then get the total number of shares for that block and calculate unconfirmed balace from there
-						//Get total User shares this block/round
-							$tmpTotalUserSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$blockList["blockNumber"]."' AND `username` = '".$username.".%'");
-							$tmpTotalUserShares = mysql_num_rows($tmpTotalUserSharesQ);
-						
-						//get total pool shares
-							$tmpTotalPoolSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$blockList["blockNumber"]."'");
+		//Get unconfirmed balance
+			//Go through all the `shares_history` Blocks numbers that have been found
+				$unconfirmedBalance = 0;
+				$blockHistoryQ = mysql_query("SELECT DISTINCT `blockNumber` FROM `shares_history` WHERE `username` LIKE '$username.%'");
+				while($block = mysql_fetch_array($blockHistoryQ)){
+					//With the selected $block, check estimated balance from that round
+						$getRoundSharesQ = msyql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%'");
+						$numRoundShares = mysql_num_rows($getRoundSharesQ);
+
+						$getTotalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."'");
+						$numTotalRoundShares = mysql_num_rows($getTotalRoundSharesQ);
+
+					//Calculate balance
+						$unconfirmedBalance += round(50*($numRoundShares/$numTotalRoundShares), 8);
 					
-						//add it up
-							$totalUserShares += $tmpTotalUserShares;
-							$totalPoolShares += $tmpTotalPoolShares;
 				}
 
 		//Set stats variables
@@ -276,6 +273,7 @@ class getCredientials{
 			$this->totalPoolShares = $totalPoolShares;
 			$this->estimatedReward = $estReward;
 			$this->accountBalance = $balance;
+			$this->pendingBalance = $unconfirmedBalance;
 			$this->email		= $email;
 			$this->threashhold	= $threashhold;
 			$this->sendAddress	= $sendAddress;

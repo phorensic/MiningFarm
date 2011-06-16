@@ -183,8 +183,8 @@ if($numTimestamps){
 	$Test->drawTitle(50,22,"Average time in minutes it takes to submit a share",183,183,183,TRUE);  
 	$Test->Render($dir."/images/graphs/poolOverview.png");
 
-}*/
-
+}
+*/
 //Generate The Average Pool MHashe/s
 //Add points on graph
 //Get data by the last 5 minutes
@@ -220,10 +220,12 @@ if($numWorkers){
 	}
 }else if ($numWorkers == 0){
 		$DataSet->AddPoint(0.1, "Pool Average");
+		$DataSet->AddPoint(0.1, "Pool Average");
+		$DataSet->AddPoint(0.1, "Pool Average");
 }
 
 		
-		$DataSet->AddAllSeries();  
+	$DataSet->AddAllSeries();  
 	$DataSet->setXAxisName("5 Minute Time Period");
 	// Initialise the graph  
 	$Test = new pChart(550,160);  
