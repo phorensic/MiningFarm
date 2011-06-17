@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*--Body--*/
 	body {
 		background-color: #e1ddd9;
@@ -281,3 +282,247 @@ margin-top:15px;
 }
 
 
+=======
+*{
+	/*border:1px solid #000;*/
+	padding:0;
+	margin:0;
+}
+
+body{
+	background-color:#FFFFCC;
+	background-image:url(/images/background.jpg);
+	background-position:13em 8em;
+	color:#FFF;
+	
+	height:100%;
+}
+
+html{
+	height:100%;
+}
+
+/*--Graphical--*/
+#header{
+	width:100%;
+	height:8em;
+	background-color:#104E8B;
+	background-image:url(/images/headerBg.png);
+}
+#mhashGraph{
+	float:right;
+	position:relative;
+	top:-6.5em;
+	left:0;
+}
+
+	/*--Menu Box--*/
+		#menuBar{
+			background-image:url(/images/menuBg.png);
+			background-position:bottom left;
+			background-color:#1874CD;
+			width: 100%;
+			height:2.5em;
+		}
+		
+		/*--Menu Buttons--*/
+			div.menuBtn{
+				float:left;
+				margin-left:1em;
+				height:2.5em;
+			}
+
+			div.menuBtn:Hover{
+				float:left;
+				margin-left:1em;
+				background-color:#005177;
+				height:2.5em;
+			}
+	
+	
+	/*--Login Box--*/
+		#loginBox{
+			position:relative;
+			top:0;
+			left:-1em;
+			float:left;
+			background-color:#104E8B;
+			background-image:url(/images/contentBg-header.png);
+			width:15em;
+			height: 100%;
+			margin-left:1em;
+			padding-top:1em;
+		}
+		
+		#loginForm{
+			position:relative;
+			top:0;
+			left:1em;
+		}
+		
+		#lostPassForm{
+			position:relative;
+			top:0;
+			left:1em;
+		}
+		
+		#register{
+			position:relative;
+			top:0;
+			left:1em;
+		}
+		
+	/*--User Info--*/
+		#userInfo{
+			position:relative;
+			top:0;
+			left:-1em;
+			float:left;
+			background-color:#005177;
+			/*background-image:url(/images/contentBg-header.png);*/
+			width:15em;
+			height: 100%;
+			margin-left:1em;
+			padding-top:1em;
+			padding-left:1em;
+		}
+		
+	/*--Quick Stats--*/
+		#quickStats{
+			padding-top:1em;
+			
+		}
+		
+	/*--Blog Post--*/
+		.blogPost{
+			width:65em;
+			padding-top:1.5em;
+			/*background-image:url(/images/contentBg-header.png);*/
+		}
+		
+	/*--Blog Container--*/
+		#blogContainer{
+			width:65em;
+		}
+		
+	/*--Footer--*/
+		#footer{
+			width:65em;
+			text-align:center;
+			margin-top:3.5em;
+			
+			/*background-image:url(/images/contentBg-header.png);*/
+		}
+		
+	/*--Authorise Email Box--*/
+		#activateEmail{
+			text-align:center;
+		}
+	
+	/*--Body Content--*/
+		#bodyContent{
+			width:50em;
+		}
+		
+	/*--Body Side Content--*/
+		#sideContent{
+			width:30em;
+			position:absolute;
+			top:13em;
+			left:48em;
+			
+			font-weight:bold;
+ 		} 
+
+
+
+/*--Text Style--*/
+
+	/*--Global Links--*/
+		a:active,a:link,a:visited{
+			color:#9FB6CD;
+		}
+		a:hover{
+			color:#FFF;
+			font-weight:bold;
+		}
+		
+	/*--Global Text--*/
+		span.goodMessage{
+			color:#66FF33;
+			font-weight:bold;
+			font-size:.9em;
+		}
+		span.returnError{
+			color:#FF6A6A;
+			font-weight:bold;
+			font-size:1.3em;
+			font-weight:bold;
+		}
+
+	/*--Header--*/
+		h1.header{
+			font-size:3.5em;
+			margin:0 auto;
+			width:100%;
+			text-align:center;
+			color:#CAE1FF;
+		}
+		h3.slogan{
+			text-align:center;
+			width:100%;
+			color:#CAE1FF;
+		}
+		
+	/*--Menu--*/
+		a.menu:active,a.menu:link,a.menu:visited{
+			color:#BCD2EE;
+			font-weight:bold;
+			font-size:1.5em;
+			text-align:center;
+			height:100%;
+		}
+
+		a.menu:hover{
+			color:#000;
+			font-weight:bold;
+			font-size:1.5em;
+			text-align:center;
+		}
+		
+	/*--Login Messages--*/
+		.loginMessages{
+			padding:3em;
+			font-size:1.2em;
+		}
+		
+	/*--Account Details--*/
+		h3.accountHeader{
+			text-decoration:underline;
+			font-size:1.5em;
+		}
+	/*--Misc--*/
+	#tooltip{
+		position:absolute; 
+		overflow:hidden;
+		visibility: hidden;
+		z-index:999; 
+		width:auto; 
+		height:auto;
+		padding:.2em;
+		background-color:#FFCC33;
+		border: 1px dashed #000;
+		color:#000
+	}
+
+	/*--Stats--*/
+	.stats{
+	}
+	
+		/*--Worker Stats--*/
+			.notConnected{
+				color:#FF5959;
+				font-weight:bolder;
+				font-style: italic;
+			}
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7

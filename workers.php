@@ -12,8 +12,14 @@
 
 //Perform login
 	$getCredientials	= new getCredientials;
+<<<<<<< HEAD
 	$loginValid		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
 if($loginValid){
+=======
+	$loginSuccess		= $getCredientials->checkLogin($_COOKIE[$cookieName]);
+
+if($loginSuccess){
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 	//Connect to db
 		connectToDb();
@@ -62,6 +68,7 @@ if($loginValid){
 				mysql_query("DELETE FROM `pool_worker` WHERE `id` = '".$workerId."' AND `associatedUserId` = '".$getCredientials->userId."'");
 		}
 ?>
+<<<<<<< HEAD
 <!--?xml version="1.0" encoding="iso-8859-1"?-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -192,3 +199,64 @@ if($loginValid){
 	header("Location: /");
 }
 ?>
+=======
+<html>
+	<head>
+		<title>Why are you on this page?</title>
+		<!--This is the main style sheet-->
+		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
+		<style type="text/css">
+			body{
+				background-color:transparent;
+				background-image:url();
+			}
+		</style>
+	</head>
+	<body>
+		<span class="workersMessages"><?php echo $returnError;?></span>
+		<form action="workers.php" method="post">
+		<input type="text" name="username" value="username"> &middot; <input type="text" name="password" value="password"><input type="submit" name="act" value="Add Worker"><br/>
+		</form><br/>
+		<hr size="1" width="100%">
+		</form>
+		<?php
+			//Get and show list of workers along with a <form> to add more workers
+				//Get time 5 minutes ago
+					$timeFiveMinutesAgo = time();
+					$timeFiveMinutesAgo -= 60*5;
+					
+				$listWorkersQ = mysql_query("SELECT `id`, `username`, `password` FROM `pool_worker` WHERE `associatedUserId` = '".$getCredientials->userId."' ORDER BY `id` DESC")or die(mysql_error());
+
+				while($worker = mysql_fetch_array($listWorkersQ)){
+					//Get this workers recent average Mhashes (If any recently)
+						$getMhashes = mysql_query("SELECT `mhashes` FROM `stats_userMHashHistory` WHERE `username` = '".$worker["username"]."' AND `timestamp` >= '$timeFiveMinutesAgo' ORDER BY `timestamp` DESC");
+						$numHashes = mysql_num_rows($getMhashes);
+						$totalMhashes = 0;
+						while($mhashes = mysql_fetch_array($getMhashes)){
+							$totalMhashes += $mhashes["mhashes"];
+						}
+						
+						//Prevent division by zero
+							if($totalMhashes > 0 && $totalMhashes > 0){
+								$averageHashes = $totalMhashes/$numHashes;
+							}else if($totalMhashes == 0 || $totalMhashes == 0){
+								$averageHashes = "<span class=\"notConnected\">".gettext("Not connected")."</span>";
+							}
+							
+					//Split username for user input
+						$splitUser = explode(".", $worker["username"]);
+		?>
+		<form action="workers.php" method="post">
+			<input type="hidden" name="workerId" value="<?=$worker["id"]?>">
+			<?php echo $splitUser[0]; ?>.<input type="text" name="username" value="<?php echo $splitUser[1]; ?>" size="10"> <input type="text" name="password" value="<?php echo $worker["password"];?>" size="10"><input type="submit" name="act" value="<?php echo gettext("Update");?>"><input type="submit" name="act" value="<?php echo gettext("Delete");?>"/><br/>
+			<span class="workerMhash"><?php echo $averageHashes; ?> MHash/s</span>
+		</form>
+		<hr size="1" width="100%"><br/>
+		<?php
+				}
+		}
+
+		?>
+	</body>
+</html>
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7

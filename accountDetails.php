@@ -88,6 +88,7 @@ if($loginValid){
 				
 		}
 ?>
+<<<<<<< HEAD
 <!--?xml version="1.0" encoding="iso-8859-1"?-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -98,11 +99,32 @@ if($loginValid){
 	</head> 
 	<body>
 		<br/><br/>
+=======
+<html>
+	<head>
+		<title><?php echo outputPageTitle();?> - Account Details</title>
+		<!--This is the main style sheet-->
+		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
+		<link rel="shortcut icon" href="/images/favicon.png" />
+		<script type="text/javascript" src="/js/tooltipFollower.js"/>
+		<?php
+			//If user isn't logged in load the login.js
+			if(!$loginSuccess){
+		?>
+			<script src="/js/login.js"></script>
+		<?php
+			}
+		?>
+		<script type="text/javascript" src="/js/swfobject/swfobject.js"></script>
+	</head>
+	<body>
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 		<div id="content">
 			<?php
 			//Include the header & slogan
 			include($header);
 			////////////////////////////
+<<<<<<< HEAD
 			?>	
 			<div id="tooltip">&nbsp;</div>
 			<?php
@@ -223,6 +245,73 @@ if($loginValid){
 		<br/><Br/>
 	</body>
 </html>
+=======
+			
+			//Include the menuLocation
+			include($menu);
+			////////////////////////////
+			?>
+			<div id="bodyContent">
+				<?php 
+					//Ouput the login or the users stats depending on weather or not they are logged in
+					include($userInfoBox); 
+					/////////////////////////////////////
+					$getCredientials->getStats();
+				?>
+					<div id="tooltip">&nbsp;</div>
+					<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
+					<span class="returnError"><?php echo $returnError; ?></span><br/>
+					<br/>
+					<h3 class="accountHeader">Identity Details</h2>
+					<?php echo gettext("Username");?>: <?php echo $getCredientials->username;?><br/>
+					<?php echo gettext("Confirmed Email");?>: <?php echo $getCredientials->email;?><br/>
+					<?php echo gettext("Confirmed Balance");?>: <?php setlocale(LC_MONETARY, 'en_US');
+									echo money_format('%i', $getCredientials->accountBalance);?>BTC<br/><br/>
+					<h3 class="accountHeader"><?php echo gettext("Edit your payout");?></h2>
+					<form action="accountDetails.php" method="post">
+						<input type="hidden" name="act" value="editIdentity">
+						<?php echo gettext("Payout Address");?>:<input type="text" size="32" name="payoutAddress" value="<?php echo $getCredientials->sendAddress;?>"><br/>
+						<?php echo gettext("Automatic Payout at");?>:<input type="text" size="5" name="payoutThreashHold" value="<?php if(!isSet($getCredientials->threashhold)){ echo "0.5";}else{ echo $getCredientials->threashhold;}?>"><b>BTC</b> (0 = <?php echo gettext("Disabled");?>)<br/>
+						<i><?php echo gettext("Authorisation Pin");?>:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
+						<input type="submit" value="<?php echo gettext("Update Payout Address");?>">
+					</form>
+					<hr size="1" width="500"><br/><br/>
+
+					<h3 class="accountHeader">Manual Payout</h2>
+					<form action="accountDetails.php" method="post">
+						<input type="hidden" name="act" value="manualCashout">
+						<i>Authorisation Pin:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
+						You will be sending the amount of <b><?php echo $getCredientials->accountBalance;?>BTC</b>
+						to the <br/>bitcoin address of <?php
+								if(isSet($getCredentials->sendAddress)){
+									echo $getCredientials->sendAddress;
+								}else{
+									echo "<b>".gettext("None")."</b>";
+								}?><br/>
+						<input type="submit" value="<?php echo gettext("Execute Payout");?>">
+					</form>
+					<hr size="1" width="500"><br/><br/>
+					
+					<h3 class="accountHeader"><?php echo gettext("Workers");?></h2>
+					<iframe src="/workers.php" width="500" height="250" frameborder="0" allowtransparency="true"></iframe>
+
+				<?php
+					//Output Footer
+					include($footer);
+					///////////////
+				?>
+			</div>
+			<div id="sideContent">
+				<h3 class="accountHeader"><?php echo gettext("JSON Mining &amp; Worker Data");?></h3><br/>
+				<input type="text" name="nothing" value="<?php echo $getCredientials->apiToken;?>" size="40" onMouseOver="showTooltip('<?php echo gettext("API token to give you <i>private</i> access to your worker status");?>');" onMouseOut="hideTooltip();"/><br/>
+				<a href="/json/workerstatus.php"><?php echo gettext("Worker Status");?></a><br/>
+				<a href="/json/poolstats.php"><?php echo gettext("Overall Stats");?></a>
+			</div>
+		</div>
+	</body>
+</html>
+
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 <?php
 }else{
 	header("Location: /");

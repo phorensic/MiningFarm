@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!--Javascript Area that will be included in all pages-->
 	<!--Login Dissapear Script-->
 	<script src="/js/login.js"></script>
@@ -63,4 +64,15 @@ if(!$loginValid){
 		}
 ?>
 	</ul>
+=======
+<div id="header">	
+	<div id="logo">
+		<h1 class="header" id="headerTitle"><a href="/"><?php echo outputHeaderTitle();?></a></h1><br/>
+		<h3 class="slogan" id="sloganTitle"><?php echo outputHeaderSlogan();?></h3>
+	
+	</div>
+	<div id="mhashGraph">
+		<img src="/images/graphs/poolOverview-Mhashes.png">
+	</div>
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 </div>

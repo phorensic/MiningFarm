@@ -3,7 +3,11 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
+<<<<<<< HEAD
 -- Generation Time: Jun 17, 2011 at 02:35 AM
+=======
+-- Generation Time: Jun 14, 2011 at 04:34 PM
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 -- Server version: 5.1.54
 -- PHP Version: 5.3.5-1ubuntu7.2
 
@@ -33,15 +37,22 @@ CREATE TABLE IF NOT EXISTS `accountBalance` (
   `threshhold` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
+<<<<<<< HEAD
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
+=======
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 --
 -- Dumping data for table `accountBalance`
 --
 
+<<<<<<< HEAD
 INSERT INTO `accountBalance` (`id`, `userId`, `balance`, `payoutAddress`, `threshhold`) VALUES
 (40, 43, '0.00', '12QY5HYbiT5Nx6fek8ss5pAywPsV3kqdu3', '1'),
 (41, 44, '0.00', '', '');
+=======
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 -- --------------------------------------------------------
 
@@ -74,15 +85,23 @@ CREATE TABLE IF NOT EXISTS `networkBlocks` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
   `blockNumber` int(255) NOT NULL,
   `timestamp` int(255) NOT NULL,
+<<<<<<< HEAD
   `txid` varchar(255) NOT NULL,
   `confirms` int(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+=======
+  `accountAddress` varchar(255) NOT NULL,
+  `confirms` int(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 --
 -- Dumping data for table `networkBlocks`
 --
 
+<<<<<<< HEAD
 INSERT INTO `networkBlocks` (`id`, `blockNumber`, `timestamp`, `txid`, `confirms`) VALUES
 (11, 131185, 1308197153, '', 0),
 (12, 131186, 1308198419, '', 0),
@@ -90,6 +109,8 @@ INSERT INTO `networkBlocks` (`id`, `blockNumber`, `timestamp`, `txid`, `confirms
 (14, 131188, 1308199186, '', 0),
 (15, 131189, 1308199949, '', 0);
 
+=======
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 -- --------------------------------------------------------
 
 --
@@ -103,17 +124,24 @@ CREATE TABLE IF NOT EXISTS `pool_worker` (
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
+<<<<<<< HEAD
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+=======
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 --
 -- Dumping data for table `pool_worker`
 --
 
+<<<<<<< HEAD
 INSERT INTO `pool_worker` (`id`, `associatedUserId`, `username`, `password`) VALUES
 (19, 43, 'Xenland.username', 'password'),
 (20, 44, 'test.username', 'password'),
 (21, 44, 'test.username2', 'password'),
 (22, 43, 'Xenland.username2', 'password');
+=======
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 -- --------------------------------------------------------
 
@@ -132,12 +160,17 @@ CREATE TABLE IF NOT EXISTS `shares` (
   `reason` varchar(50) DEFAULT NULL,
   `solution` varchar(257) NOT NULL,
   PRIMARY KEY (`id`)
+<<<<<<< HEAD
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1381 ;
+=======
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=703 ;
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 --
 -- Dumping data for table `shares`
 --
 
+<<<<<<< HEAD
 INSERT INTO `shares` (`id`, `time`, `epochTimestamp`, `rem_host`, `username`, `our_result`, `upstream_result`, `reason`, `solution`) VALUES
 (703, '2011-06-15 21:10:54', 1308197379, '::ffff:127.0.0.1', 'xenland.username', 'Y', NULL, NULL, '00000001854a2043dc58100fbf75621b0d0428dfe0b0e64cc17ca01800000f28000000000f5a64b7580b63756aa7b17012ea59c0c616167e6e8e2448d1e4a2775bdff9f74df982011a13218586e37a20000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000'),
 (704, '2011-06-15 21:10:54', 1308197390, '::ffff:127.0.0.1', 'xenland.username', 'Y', NULL, NULL, '00000001854a2043dc58100fbf75621b0d0428dfe0b0e64cc17ca01800000f28000000000f5a64b7580b63756aa7b17012ea59c0c616167e6e8e2448d1e4a2775bdff9f74df9820c1a1321855b6c4614000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000'),
@@ -822,6 +855,8 @@ INSERT INTO `shares` (`id`, `time`, `epochTimestamp`, `rem_host`, `username`, `o
 (1379, '2011-06-17 02:34:33', 1308303242, '::ffff:127.0.0.1', 'xenland.username', 'Y', NULL, NULL, '000000015f93c25c4aaaa233d6e7881d5db904b24733efe737134cdd000011f100000000167ab156ebf7fc121be2fa424cfc1788b4680b9b91384cc8ae6de1fd45323bb44dfb1f7e1a132185eb4e3ff9000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000'),
 (1380, '2011-06-17 02:34:55', 0, '::ffff:127.0.0.1', 'xenland.username', 'Y', NULL, NULL, '000000015f93c25c4aaaa233d6e7881d5db904b24733efe737134cdd000011f100000000307d55a8d1310fa257639918e649e5603b1982698178ab2e74a752fb957762984dfb1fb21a13218523df3537000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000');
 
+=======
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 -- --------------------------------------------------------
 
 --
@@ -850,6 +885,7 @@ CREATE TABLE IF NOT EXISTS `shares_history` (
 -- --------------------------------------------------------
 
 --
+<<<<<<< HEAD
 -- Table structure for table `stats_poolMHashHistory`
 --
 
@@ -915,6 +951,8 @@ INSERT INTO `stats_poolMHashHistory` (`id`, `timestamp`, `averageMhash`) VALUES
 -- --------------------------------------------------------
 
 --
+=======
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 -- Table structure for table `stats_userMHashHistory`
 --
 
@@ -924,12 +962,17 @@ CREATE TABLE IF NOT EXISTS `stats_userMHashHistory` (
   `mhashes` varchar(20) NOT NULL,
   `timestamp` int(11) NOT NULL,
   PRIMARY KEY (`id`)
+<<<<<<< HEAD
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2309 ;
+=======
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1937 ;
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 --
 -- Dumping data for table `stats_userMHashHistory`
 --
 
+<<<<<<< HEAD
 INSERT INTO `stats_userMHashHistory` (`id`, `username`, `mhashes`, `timestamp`) VALUES
 (1937, 'Xenland.username', '0', 1308197163),
 (1938, 'Xenland.username', '0', 1308197255),
@@ -1304,6 +1347,8 @@ INSERT INTO `stats_userMHashHistory` (`id`, `username`, `mhashes`, `timestamp`) 
 (2307, 'test.username2', '0', 1308303278),
 (2308, 'Xenland.username2', '0', 1308303278);
 
+=======
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 -- --------------------------------------------------------
 
 --
@@ -1316,17 +1361,26 @@ CREATE TABLE IF NOT EXISTS `websiteSettings` (
   `confirmEmailPrefix` text NOT NULL COMMENT 'The text or HTML written email that is sent for email confirmation',
   `slogan` varchar(255) NOT NULL,
   `browserTitle` varchar(255) NOT NULL,
+<<<<<<< HEAD
   `cashoutMinimum` varchar(5) NOT NULL COMMENT 'The minimum balance required before a user can cash out',
   `footerWelcomeTitle` varchar(255) NOT NULL,
   `footerWelcomeContent` text NOT NULL
+=======
+  `cashoutMinimum` varchar(5) NOT NULL COMMENT 'The minimum balance required before a user can cash out'
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `websiteSettings`
 --
 
+<<<<<<< HEAD
 INSERT INTO `websiteSettings` (`header`, `noreplyEmail`, `confirmEmailPrefix`, `slogan`, `browserTitle`, `cashoutMinimum`, `footerWelcomeTitle`, `footerWelcomeContent`) VALUES
 ('Mining Farm #2', 'no-reply@yourdomain.com', 'Welcome you "Your pool name here" glad you are interested in our services, In order to activate your account you must click the link provided and you will be allowed immediate login access past this point. Thank you for you time.', 'IP:173.212.217.202 · PORT: 8341', 'Mining Farm #2 | Mining Pool', '1', '', '');
+=======
+INSERT INTO `websiteSettings` (`header`, `noreplyEmail`, `confirmEmailPrefix`, `slogan`, `browserTitle`, `cashoutMinimum`) VALUES
+('Mining Pool v3', 'no-reply@yourdomain.com', 'Welcome you "Your pool name here" glad you are interested in our services, In order to activate your account you must click the link provided and you will be allowed immediate login access past this point. Thank you for you time.', 'IP:66.197.184.28 · PORT: 8341', 'Mining Pool', '1');
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 -- --------------------------------------------------------
 
@@ -1349,7 +1403,11 @@ CREATE TABLE IF NOT EXISTS `websiteUsers` (
   `authPin` varchar(255) NOT NULL COMMENT 'A pin that must be supplied when changing details to various things',
   `apiToken` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
+<<<<<<< HEAD
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
+=======
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 
 --
 -- Dumping data for table `websiteUsers`

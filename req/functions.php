@@ -13,7 +13,11 @@ $footer		= $req."footer.php";
 $bitcoind	= $req."/bitcoinWallet/bitcoin.inc.php";
 
 //Cookies!
+<<<<<<< HEAD
 $cookieName = "miningfarm#2";
+=======
+$cookieName = "miningpool2";
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 $cookiePath = "/";
 $cookieDomain = "";
 
@@ -79,6 +83,7 @@ function loginUser($username, $password){
 		$password = hash("sha256", $password);
 	//Check if this login an username is correct
 
+<<<<<<< HEAD
 		$loginCheckQ	= mysql_query("SELECT `id`, `emailAuthorised`, `disabled` FROM `websiteUsers` WHERE `username` = '".$username."' AND `password` = '".$password."' LIMIT 0,1")or die(mysql_error());
 		$loginExists	= mysql_num_rows($loginCheckQ);
 		$loginObj	= mysql_fetch_object($loginCheckQ);
@@ -126,6 +131,44 @@ function loginUser($username, $password){
 		}else if($disabled == 1){
 			$loginSuccess = 5;
 		}
+=======
+		$loginCheckQ	= mysql_query("SELECT `id`, `emailAuthorised` FROM `websiteUsers` WHERE `username` = '".$username."' AND `password` = '".$password."' LIMIT 0,1")or die(mysql_error());
+		$loginObj	= mysql_fetch_object($loginCheckQ);
+		$userId 	= $loginObj->id;
+		$emailAuthorised = $loginObj->emailAuthorised;
+
+	//Set cookie; If validlogin is true
+			if($emailAuthorised == 1){
+				//Get ip address so we can hash with the cookie
+					$ip = $_SERVER['REMOTE_ADDR'];
+					$timeoutStamp = time()+60*30; //30 minute session
+
+				//Update logged in ip address so no one can steal this cookie hash unless
+					mysql_query("UPDATE `websiteUsers` SET `sessTimestamp` = ".$timeoutStamp.", `loggedIp` = '".$ip."' WHERE `id` = '".$userId."'");
+
+				//Generate random secret
+					$randomSecret = genRandomString(10);
+					//Update random string to database so we can hash it into the cookie
+						mysql_query("UPDATE `websiteUsers` SET `randomSecret` = '".$randomSecret."' WHERE `id` = '".$userId."'");
+
+				//Set cookie in browser for session
+					//Get hashed password for hashing the cookie
+						$getPassQ = mysql_query("SELECT `password` FROM `websiteUsers` WHERE `id` = '".$userId."'");
+						$getPassObj = mysql_fetch_object($getPassQ);
+
+					//Make cookie :)
+						$hash	= $randomSecret.$password.$ip.$timeoutStamp;
+						$hash = hash("sha256", $hash);
+						setcookie($cookieName, $userId."-".$hash, $timeoutStamp, $cookiePath, $cookieDomain);
+
+				//Successfull login code
+					$loginSuccess = 1;
+
+			}else if($emailAuthorised == 0){
+
+				$loginSuccess = 3;
+			}
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 	//Return Boolean;
 		return $loginSuccess;
 }
@@ -267,10 +310,17 @@ class getCredientials{
 				$blockHistoryQ = mysql_query("SELECT DISTINCT `blockNumber` FROM `shares_history` WHERE `username` LIKE '$username.%'");
 				while($block = mysql_fetch_array($blockHistoryQ)){
 					//With the selected $block, check estimated balance from that round
+<<<<<<< HEAD
 						$getRoundSharesQ = msyql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%' AND `our_result` != 'N'");
 						$numRoundShares = mysql_num_rows($getRoundSharesQ);
 
 						$getTotalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `our_result` != 'N'");
+=======
+						$getRoundSharesQ = msyql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%'");
+						$numRoundShares = mysql_num_rows($getRoundSharesQ);
+
+						$getTotalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."'");
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 						$numTotalRoundShares = mysql_num_rows($getTotalRoundSharesQ);
 
 					//Calculate balance

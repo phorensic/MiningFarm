@@ -118,6 +118,7 @@ error_reporting(0);
 			
 							if($enoughConfirms >= 120){
 								//Count all the shares this username has, reward them in there account balance, then mark all the shares as counted
+<<<<<<< HEAD
 									$uncountedWorkerSharesQ = mysql_query("UPDATE `shares_history` SET `shareCounted` = '1' WHERE `shareCounted` = '0' AND `blockNumber` = '".$block["blockNumber"]."' AND `username` = '".$waitingUsername["username"]."' AND `our_result` != 'N'")or die(mysql_error());
 									$numUncountedShares = mysql_affected_rows();
 						
@@ -126,6 +127,13 @@ error_reporting(0);
 									
 									//Get number of shares that round
 										$totalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `our_result` != 'N'");
+=======
+									$uncountedWorkerSharesQ = mysql_query("UPDATE `shares_history` SET `shareCounted` = '1' WHERE `shareCounted` != '0' AND `blockNumber` = '".$block["blockNumber"]."' AND `username` = '".$waitingUsername["username"]."'")or die(mysql_error());
+									$numUncountedShares = mysql_affected_rows();
+
+									//Get number of shares that round
+										$totalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."'");
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
 										$totalRoundShares = mysql_num_rows($totalRoundSharesQ);
 
 									$shareRatio = $numUncountedShares/$totalRoundShares;
@@ -145,4 +153,8 @@ error_reporting(0);
 					}
 			}
 
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> f9332a8ad0cd4e27505f162718c69fc8ea297aa7
