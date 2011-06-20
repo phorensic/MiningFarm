@@ -311,12 +311,12 @@ class getCredientials{
 				while($block = mysql_fetch_array($blockHistoryQ)){
 					//With the selected $block, check estimated balance from that round
 <<<<<<< HEAD
-						$getRoundSharesQ = msyql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%' AND `our_result` != 'N'");
+						$getRoundSharesQ = mysql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%' AND `our_result` != 'N'");
 						$numRoundShares = mysql_num_rows($getRoundSharesQ);
 
 						$getTotalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `our_result` != 'N'");
 =======
-						$getRoundSharesQ = msyql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%'");
+						$getRoundSharesQ = mysql_query("SELECT `id FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."' AND `username` = '$username.%'");
 						$numRoundShares = mysql_num_rows($getRoundSharesQ);
 
 						$getTotalRoundSharesQ = mysql_query("SELECT `id` FROM `shares_history` WHERE `blockNumber` = '".$block["blockNumber"]."'");
