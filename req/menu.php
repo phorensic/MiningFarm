@@ -1,6 +1,6 @@
 <div id="menuBar">
 		<div class="menuBtn">
-			<a href="/stats.php" class="menu"><?php echo gettext("Statistics");?></a>
+			<a href="/stats.php" class="menu"><?php echo gettext("Block Statistics");?></a>
 		</div>
 <?php
 //Display the following only if $cookieValid

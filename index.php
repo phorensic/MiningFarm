@@ -103,8 +103,8 @@ if(isSet($_COOKIE[$cookieName])){
 							chart: {
 								renderTo: 'graph',
 								defaultSeriesType: 'line',
-								width:750,
-								height:250
+								width:650,
+								height:225
 							},
 							title: {
 								text: 'Average Hashes (Up to date by the minute)'
