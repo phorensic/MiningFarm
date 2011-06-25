@@ -137,6 +137,22 @@ if(isSet($_COOKIE[$cookieName])){
 				<div id="graph" align="center">
 					<img src="/images/placeholder.jpg" alt="placeholder">
 				</div><br/><br/>
+					
+					<div align="center">Shares this round: <b>
+					<?php
+						$shares = "";
+							$shares = mysql_query("SELECT COUNT(*) FROM `shares` ");
+							$shares = mysql_fetch_array($shares);
+						printf($shares['0']);
+					?></b>&nbsp;&nbsp;&nbsp;&nbsp;
+					Workers: <b>
+					<?php
+						$workers = "";
+							$workers = mysql_query("SELECT COUNT(*) FROM `pool_worker` ");
+							$workers = mysql_fetch_array($workers);
+						printf($workers['0']);
+					?></b>
+					</div><br /><br />
 
 				<table align="center" cellpadding="5" cellspacing="5">
 					<tbody>
