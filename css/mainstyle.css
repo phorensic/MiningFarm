@@ -275,10 +275,14 @@
 	}
 			
 
-#graph{
-	margin-top:20px;
+	#graph{
+		margin-top:20px;
 	}
 	
+	#activateEmail{
+		text-align:center;
+	}
+		
 
 	
 

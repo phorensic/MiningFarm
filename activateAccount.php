@@ -26,14 +26,8 @@
 		<title><?php echo outputPageTitle();?> - Main Page</title>
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" /> 
-		<?php
-			//If user isn't logged in load the login.js
-			if(!$loginSuccess){
-		?>
-			<script src="/js/login.js"></script>
-		<?php
-			}
-		?>
+		<script src="/js/login.js"></script>
+
 		<script type="text/javascript" src="/js/swfobject/swfobject.js"></script>
 	</head>
 	<body>
@@ -42,17 +36,8 @@
 			//Include the header & slogan
 			include($header);
 			////////////////////////////
-			
-			//Include the menuLocation
-			include($menu);
-			////////////////////////////
 			?>
 			<div id="bodyContent">
-				<?php 
-					//Ouput the login or the users stats depending on weather or not they are logged in
-					include($userInfoBox); 
-					/////////////////////////////////////
-				?>
 				<div id="blogContainer">
 						<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
 						<span class="returnError"><?php echo $returnError; ?></span><br/>
