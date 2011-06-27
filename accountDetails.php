@@ -92,18 +92,10 @@ if($loginValid){
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title><?php echo outputPageTitle();?> - <?php echo gettext("Main Page");?></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<link href="/css/mainstyle.css" rel="stylesheet" type="text/css">
-	</head> 
-	<body>
-		<br/><br/>
-<html>
-	<head>
 		<title><?php echo outputPageTitle();?> - Account Details</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<!--This is the main style sheet-->
 		<link rel="stylesheet" href="/css/mainstyle.css" type="text/css" />
-		<link rel="shortcut icon" href="/images/favicon.png" />
 		<script type="text/javascript" src="/js/tooltipFollower.js"/>
 		<?php
 			//If user isn't logged in load the login.js
