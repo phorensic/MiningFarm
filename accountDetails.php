@@ -210,7 +210,7 @@ if($loginValid){
 										<i>Authorisation Pin:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
 										You will be sending the amount of <b><?php echo $getCredientials->accountBalance;?>BTC</b>
 										<br/>to the bitcoin address of <?php
-												if(isSet($getCredentials->sendAddress)){
+												if(isSet($getCredientials->sendAddress)){
 													echo $getCredientials->sendAddress;
 												}else{
 													echo "<b>".gettext("None")."</b>";
