@@ -99,7 +99,7 @@
 												
 													//Add suffix to the activation link
 														$serverAddress = $_SERVER['HTTP_HOST'];
-														$message .= "\n<br/>Authorization #\n<br/>".$authoriseEmailPin."\n<br/>http://$serverAddress/activateAccount.php";
+														$message .= "\nAuthorization #\n".$authoriseEmailPin."\n<br/>http://$serverAddress/activateAccount.php?authNumber=".$authoriseEmailPin."&username=".$username;
 											
 												//Send an email with all the information
 													$to      = $email;
