@@ -154,7 +154,6 @@ if($loginValid){
 								<h3 class="accountHeader"><?php echo gettext("JSON Mining &amp; Worker Data");?></h3>
 								<input type="text" name="nothing" value="<?php echo $getCredientials->apiToken;?>" size="40" onMouseOver="showTooltip('<?php echo gettext("API token to give you <i>private</i> access to your worker status");?>');" onMouseOut="hideTooltip();"/><br/>
 								<a class="accountLinks" href="/json/workerstatus.php?apiToken=<?php echo $getCredientials->apiToken;?>"><?php echo gettext("Worker Status");?></a><br/>
-								<a class="accountLinks" href="/json/poolstats.php"><?php echo gettext("Overall Stats");?></a>
 							</td>
 						</td>
 					</tbody>
