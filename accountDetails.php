@@ -56,29 +56,35 @@ if($loginValid){
 
 					if($act == "manualCashout"){
 						//Manually cashing out
-					
-							//Does this accountbalance meet the `cashoutMinimum`
-								$accountBalance = $getCredientials->accountBalance;
-								$cashOutAddress = $getCredientials->sendAddress;
+
+							//Does this accountbalance meet the cashoutMinimum
 								$userId		= $getCredientials->userId;
+										//Get payout address and balance
+										$payoutQ = mysql_query("SELECT `payoutAddress`, `balance` FROM `accountBalance` WHERE `userId` = '".$userId."'")or die(mysql_error());
+										$destination = "";
+										$accountBalance = 0.00;
+										while($payoutObj = mysql_fetch_object($payoutQ)){
+											$accountBalance = $payoutObj->balance;
+											$destination = $payoutObj->payoutAddress;
+										}
 								$cashOutMin	= getCashoutMin();
 								if($accountBalance >= $cashOutMin){
 									//Subtract $accountBalance by 0.01 for the hardwired transaction fee
 										$accountBalance -= 0.01;
 
-										$successSend = $bitcoinController->sendtoaddress($cashOutAddress, $accountBalance);
+										$successSend = $bitcoinController->sendtoaddress($destination, $accountBalance);
 
 									//Reset account balance to zero
 										if($successSend){
 											mysql_query("UPDATE `accountBalance` SET `balance` = '0' WHERE `userId` = '".$userId."'");
-											$goodMessage = gettext("Successfully sent the amount of ").$accountBalance.gettext(" minus the 0.01 transaction fee to the bitcoin address of ").$cashOutAddress;
+											$goodMessage = gettext("Successfully sent the amount of ").$accountBalance.gettext(" minus the 0.01 transaction fee to the bitcoin address of ").$destination;
 										}else{
 											$returnError = gettext("Bitcoind Query Error | Contact admin!");
 										}
 
 								}else if($accountBalance < $cashOutMin){
-									//No enough funds
-									$returnError =  gettext("The operator thinks it is best to have atleaset <b>".$cashOutMin."BTC</b> to cashout.");
+									//Not enough funds
+									$returnError =  gettext("The operator thinks it is best to have at least <b>".$cashOutMin."BTC</b> to cashout.");
 								}
 					}
 				}else{
@@ -87,6 +93,8 @@ if($loginValid){
 
 				
 		}
+		
+		$adminFee = getAdminFee();
 ?>
 <!--?xml version="1.0" encoding="iso-8859-1"?-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -119,12 +127,12 @@ if($loginValid){
 				//Only show if there is something to show
 					if(isSet($goodMessage) || isSet($returnError)){
 			?>
-			<span class="goodMessage"><?php echo $goodMessage; ?></span><br/>
-			<span class="returnError"><?php echo $returnError; ?></span><br/>
+			<span class="goodMessage"><?php echo $goodMessage; ?></span><br />
+			<span class="returnError"><?php echo $returnError; ?></span><br />
 			<?php
 					}
 			?>
-			<br/><br/>
+			<br /><br />
 			<div id="mainbox">
 				<table align="center" cellpadding="0" cellspacing="0" class="bigContent">
 					<tbody>
@@ -142,23 +150,23 @@ if($loginValid){
 						<tr>
 							<td colspan="3" class="contContent">
 								<!--Identity Details Begin Content-->
-								<?php echo gettext("Username");?>: <?php echo $getCredientials->username;?><br/>
-								<?php echo gettext("Confirmed Email");?>: <?php echo $getCredientials->email;?><br/>
+								<?php echo gettext("Username");?>: <?php echo $getCredientials->username;?><br />
+								<?php echo gettext("Confirmed Email");?>: <?php echo $getCredientials->email;?><br />
 								<hr size="1" width="100%"/>
-								<?php echo gettext("Confirmed Balance");?>: <?php setlocale(LC_MONETARY, 'en_US'); echo $getCredientials->accountBalance;?> BTC<br/>
-								<?php echo gettext("Unconfirmed Balance");?>: <?php echo $getCredientials->pendingBalance;?> BTC<br/>
-								<?php echo gettext("Estimated Reward this Round");?>: <?php echo $getCredientials->estimatedReward;?> BTC
+								<?php echo gettext("Confirmed Balance");?>: <b><?php setlocale(LC_MONETARY, 'en_US'); echo $getCredientials->accountBalance;?> BTC</b><br />
+								<?php echo gettext("Unconfirmed Balance");?>: <b><?php echo $getCredientials->pendingBalance;?> BTC</b><br />
+								<?php echo gettext("Estimated Reward this Round");?>: <b><?php echo $getCredientials->estimatedReward;?> BTC</b>
 								<!--Identity Details End Content-->
 								
 								<!--JSON Data-->
 								<h3 class="accountHeader"><?php echo gettext("JSON Mining &amp; Worker Data");?></h3>
-								<input type="text" name="nothing" value="<?php echo $getCredientials->apiToken;?>" size="40" onMouseOver="showTooltip('<?php echo gettext("API token to give you <i>private</i> access to your worker status");?>');" onMouseOut="hideTooltip();"/><br/>
-								<a class="accountLinks" href="/json/workerstatus.php?apiToken=<?php echo $getCredientials->apiToken;?>"><?php echo gettext("Worker Status");?></a><br/>
+								<input type="text" name="nothing" value="<?php echo $getCredientials->apiToken;?>" size="45" onMouseOver="showTooltip('<?php echo gettext("API token to give you <i>private</i> access to your worker status");?>');" onMouseOut="hideTooltip();"/><br />
+								<a class="accountLinks" href="/json/workerstatus.php?apiToken=<?php echo $getCredientials->apiToken;?>"><?php echo gettext("Worker Status");?></a><br />
 							</td>
 						</td>
 					</tbody>
 				</table>
-				<br/><br/>
+				<br /><br />
 				<table align="center" cellpadding="0" cellspacing="0" class="bigContent">
 					<tbody>
 						<tr>
@@ -166,7 +174,7 @@ if($loginValid){
 							&nbsp;
 							</td>
 							<td class="contTC">
-								<?php echo gettext("Edit your payout");?>
+								<?php echo gettext("Payout Address");?>
 							</td>
 							<td class="contTR">
 							&nbsp;
@@ -177,9 +185,8 @@ if($loginValid){
 								<!--Identity Details Begin Content-->
 								<form action="accountDetails.php" method="post">
 								<input type="hidden" name="act" value="editIdentity">
-								<?php echo gettext("Payout Address");?>:<input type="text" size="32" name="payoutAddress" value="<?php echo $getCredientials->sendAddress;?>"><br/>
-								<?php echo gettext("Automatic Payout at");?>:<input type="text" size="5" name="payoutThreashHold" value="<?php if(!isSet($getCredientials->threashhold)){ echo "0.5";}else{ echo $getCredientials->threashhold;}?>"><b>BTC</b> (0 = <?php echo gettext("Disabled");?>)<br/>
-								<i><?php echo gettext("Authorisation Pin");?>:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
+								<?php echo gettext("Payout Address");?>:<input type="text" size="40" name="payoutAddress" value="<?php echo $getCredientials->sendAddress;?>"><br />
+								<i><?php echo gettext("Authorisation Pin");?>:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br />
 								<hr size="1" width="100%">
 								<input type="submit" value="<?php echo gettext("Update Payout Address");?>">
 								</form>
@@ -188,7 +195,7 @@ if($loginValid){
 						</td>
 					</tbody>
 				</table>
-				<br/><br/>
+				<br /><br />
 				<table align="center" cellpadding="0" cellspacing="0" class="bigContent">
 					<tbody>
 						<tr>
@@ -207,14 +214,14 @@ if($loginValid){
 								<!--Manual Payout Begin Content-->
 									<form action="accountDetails.php" method="post">
 										<input type="hidden" name="act" value="manualCashout">
-										<i>Authorisation Pin:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br/>
-										You will be sending the amount of <b><?php echo $getCredientials->accountBalance;?>BTC</b>
-										<br/>to the bitcoin address of <?php
+										<i>Authorisation Pin:</i> <input type="password" name="authPin" value="" size="4" maxlength="4"><br />
+										You will be sending the amount of <b><?php echo $getCredientials->accountBalance;?> BTC</b>
+										<br />to the bitcoin address of <?php
 												if(isSet($getCredientials->sendAddress)){
 													echo $getCredientials->sendAddress;
 												}else{
 													echo "<b>".gettext("None")."</b>";
-												}?><br/><hr size="1" width="100%">
+												}?><br /><hr size="1" width="100%">
 										<input type="submit" value="<?php echo gettext("Execute Payout");?>">
 									</form>
 								<!--Manual Payout End Content-->
